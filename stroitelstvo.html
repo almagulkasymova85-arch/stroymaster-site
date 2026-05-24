@@ -1210,11 +1210,11 @@
       https://api.telegram.org/bot{TOKEN}/getUpdates
       — скопируйте "id" из поля "chat"
    ══════════════════════════════════════════════════ */
-const TG_TOKEN = 'СЮДА_ТОКЕН_БОТА';
-const TG_CHAT  = 'СЮДА_CHAT_ID';
+const TG_TOKEN = '8958857533:AAHjVYe2HGI3z592qRgrhPdjkur6Ea3ffp4';
+const TG_CHAT  = '202527540';
 
 async function sendToTelegram(data) {
-  if (TG_TOKEN.startsWith('СЮДА')) return true;
+  if (!TG_TOKEN || !TG_CHAT) return true;
   const text = [
     '🏗️ <b>Новая заявка — СтройМастер</b>',
     '',
