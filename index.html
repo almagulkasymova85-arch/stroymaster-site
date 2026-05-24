@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>СтройМастер — Ремонт квартир и строительство домов</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #08080f;
+      --bg2:      #0f0f1a;
+      --bg3:      #141422;
+      --card:     rgba(255,255,255,.04);
+      --card-h:   rgba(255,255,255,.07);
+      --border:   rgba(255,255,255,.08);
+      --border-h: rgba(255,255,255,.18);
+      --p1:       #7c3aed;
+      --p2:       #4f46e5;
+      --pg:       linear-gradient(135deg, #7c3aed, #4f46e5);
+      --gold:     #f59e0b;
+      --gold2:    #fcd34d;
+      --text:     #f1f5f9;
+      --muted:    #94a3b8;
+      --muted2:   #64748b;
+      --white:    #ffffff;
+      --danger:   #ef4444;
+      --success:  #22c55e;
+      --glow-p:   rgba(124,58,237,.35);
+      --glow-g:   rgba(245,158,11,.3);
+      --r:        16px;
+      --r2:       24px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    ::selection { background: var(--p1); color: #fff; }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg2); }
+    ::-webkit-scrollbar-thumb { background: var(--p1); border-radius: 3px; }
+
+    /* ════════════════════════════
+       HEADER
+    ════════════════════════════ */
+    header {
+      position: sticky; top: 0; z-index: 200;
+      background: rgba(8,8,15,.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 48px; height: 68px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .logo-icon {
+      width: 38px; height: 38px; border-radius: 10px;
+      background: var(--pg); display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; box-shadow: 0 0 20px var(--glow-p);
+    }
+    .logo-text { font-size: 1.15rem; font-weight: 800; color: var(--text); letter-spacing: -.3px; }
+    .logo-text span { color: var(--gold); }
+    nav { display: flex; gap: 4px; }
+    nav a {
+      color: var(--muted); text-decoration: none; padding: 8px 14px;
+      border-radius: 8px; font-size: .88rem; font-weight: 500;
+      transition: color .2s, background .2s;
+    }
+    nav a:hover { color: var(--text); background: var(--card-h); }
+    .nav-cta {
+      background: var(--pg) !important; color: #fff !important;
+      font-weight: 700 !important; box-shadow: 0 0 18px var(--glow-p);
+    }
+    .nav-cta:hover { opacity: .9; }
+
+    /* ════════════════════════════
+       HERO
+    ════════════════════════════ */
+    .hero {
+      position: relative; overflow: hidden;
+      padding: 120px 48px 100px;
+      display: flex; align-items: center; gap: 64px;
+      min-height: 88vh;
+    }
+    /* animated gradient orbs */
+    .hero::before, .hero::after, .hero-orb {
+      content: ''; position: absolute; border-radius: 50%;
+      filter: blur(90px); pointer-events: none;
+    }
+    .hero::before {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(124,58,237,.35) 0%, transparent 70%);
+      top: -100px; left: -150px;
+      animation: orb1 12s ease-in-out infinite alternate;
+    }
+    .hero::after {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(79,70,229,.28) 0%, transparent 70%);
+      bottom: -80px; right: -100px;
+      animation: orb2 10s ease-in-out infinite alternate;
+    }
+    .hero-orb {
+      width: 350px; height: 350px;
+      background: radial-gradient(circle, rgba(245,158,11,.15) 0%, transparent 70%);
+      top: 40%; right: 30%;
+      animation: orb3 15s ease-in-out infinite alternate;
+    }
+    @keyframes orb1 { 0%{ transform: translate(0,0) scale(1); } 100%{ transform: translate(80px,60px) scale(1.2); } }
+    @keyframes orb2 { 0%{ transform: translate(0,0) scale(1); } 100%{ transform: translate(-60px,-40px) scale(1.15); } }
+    @keyframes orb3 { 0%{ transform: translate(0,0); } 100%{ transform: translate(40px,-60px); } }
+
+    .hero-text { position: relative; flex: 1; z-index: 1; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      border: 1px solid rgba(124,58,237,.5);
+      background: rgba(124,58,237,.12);
+      color: var(--gold2); border-radius: 30px;
+      padding: 6px 18px; font-size: .8rem; font-weight: 600;
+      margin-bottom: 28px; letter-spacing: .5px;
+      backdrop-filter: blur(8px);
+    }
+    .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); animation: blink 2s infinite; }
+    @keyframes blink { 0%,100%{ opacity:1; } 50%{ opacity:.3; } }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 4.5vw, 3.6rem);
+      font-weight: 900; line-height: 1.1;
+      letter-spacing: -1.5px; margin-bottom: 24px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      background: var(--pg);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      color: var(--muted); font-size: 1.05rem;
+      max-width: 500px; margin-bottom: 40px; line-height: 1.75;
+    }
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+
+    .btn-pri {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--pg); color: #fff;
+      padding: 15px 32px; border-radius: 12px;
+      font-weight: 700; font-size: .97rem; text-decoration: none;
+      box-shadow: 0 0 32px var(--glow-p);
+      transition: opacity .2s, transform .2s, box-shadow .2s;
+      white-space: nowrap;
+    }
+    .btn-pri:hover { opacity: .9; transform: translateY(-2px); box-shadow: 0 0 48px var(--glow-p); }
+    .btn-sec {
+      display: inline-flex; align-items: center; gap: 8px;
+      border: 1px solid var(--border-h); color: var(--text);
+      padding: 14px 28px; border-radius: 12px;
+      font-weight: 600; font-size: .97rem; text-decoration: none;
+      backdrop-filter: blur(8px);
+      transition: background .2s, border-color .2s;
+      white-space: nowrap;
+    }
+    .btn-sec:hover { background: var(--card-h); border-color: rgba(255,255,255,.3); }
+
+    .hero-cards {
+      position: relative; z-index: 1; flex-shrink: 0;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+    }
+    .hero-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--r2); padding: 24px 22px; text-align: center;
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      transition: border-color .3s, transform .3s;
+    }
+    .hero-card:hover { border-color: rgba(124,58,237,.4); transform: translateY(-3px); }
+    .hc-num {
+      font-size: 2.2rem; font-weight: 900; letter-spacing: -1px;
+      background: var(--pg);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hc-label { color: var(--muted); font-size: .78rem; margin-top: 4px; }
+
+    /* ════════════════════════════
+       SHARED SECTION
+    ════════════════════════════ */
+    .section { padding: 96px 48px; max-width: 1160px; margin: 0 auto; }
+    .section-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      border: 1px solid rgba(124,58,237,.3);
+      background: rgba(124,58,237,.1);
+      color: var(--gold2); border-radius: 30px;
+      padding: 5px 16px; font-size: .75rem; font-weight: 700;
+      letter-spacing: .7px; text-transform: uppercase;
+      margin-bottom: 14px; backdrop-filter: blur(8px);
+    }
+    h2 {
+      font-size: clamp(1.7rem, 3vw, 2.4rem);
+      font-weight: 900; letter-spacing: -1px;
+      color: var(--text); margin-bottom: 12px; line-height: 1.2;
+    }
+    h2 span {
+      background: var(--pg);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .section-sub { color: var(--muted); font-size: .97rem; margin-bottom: 48px; max-width: 520px; }
+    .divider { height: 1px; background: var(--border); margin: 0 48px; }
+
+    /* glass card base */
+    .glass {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--r2); backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      transition: background .25s, border-color .25s, transform .25s, box-shadow .25s;
+    }
+    .glass:hover {
+      background: var(--card-h); border-color: rgba(124,58,237,.35);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(0,0,0,.4), 0 0 0 1px rgba(124,58,237,.15);
+    }
+
+    /* ════════════════════════════
+       SERVICES
+    ════════════════════════════ */
+    .services-grid {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 20px;
+    }
+    .service-card.glass { overflow: hidden; }
+    .service-card.featured {
+      grid-column: span 2; display: flex; gap: 0;
+    }
+    .sc-thumb {
+      min-width: 180px; display: flex; align-items: center;
+      justify-content: center; font-size: 3.8rem; flex-shrink: 0;
+      background: linear-gradient(135deg, rgba(124,58,237,.25), rgba(79,70,229,.15));
+      border-right: 1px solid var(--border);
+    }
+    .service-card:not(.featured) .sc-thumb {
+      min-width: unset; width: 100%; height: 130px;
+      font-size: 2.8rem; border-right: none; border-bottom: 1px solid var(--border);
+    }
+    .sc-body { padding: 26px; }
+    .sc-tag {
+      display: inline-block;
+      background: rgba(124,58,237,.2); color: #a78bfa;
+      border: 1px solid rgba(124,58,237,.3);
+      border-radius: 20px; padding: 3px 12px;
+      font-size: .73rem; font-weight: 700; margin-bottom: 10px;
+    }
+    .sc-body h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; color: var(--text); }
+    .sc-body p  { font-size: .88rem; color: var(--muted); margin-bottom: 14px; }
+    .sc-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .sc-list li {
+      font-size: .85rem; color: var(--muted2);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .sc-list li::before { content: '✓'; color: var(--gold); font-weight: 700; font-size: .9rem; }
+
+    /* ════════════════════════════
+       WHY US
+    ════════════════════════════ */
+    .why-strip { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .why-inner { max-width: 1160px; margin: 0 auto; padding: 96px 48px; }
+    .why-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: 18px; }
+    .why-card.glass { padding: 28px 24px; }
+    .why-icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      background: linear-gradient(135deg, rgba(124,58,237,.3), rgba(79,70,229,.2));
+      border: 1px solid rgba(124,58,237,.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; margin-bottom: 16px;
+    }
+    .why-card h3 { font-size: .97rem; font-weight: 700; margin-bottom: 8px; color: var(--text); }
+    .why-card p  { font-size: .85rem; color: var(--muted); line-height: 1.6; }
+
+    /* ════════════════════════════
+       PROCESS
+    ════════════════════════════ */
+    .process-track {
+      display: grid; grid-template-columns: repeat(4,1fr); gap: 0; position: relative;
+    }
+    .process-track::before {
+      content: ''; position: absolute;
+      top: 35px; left: calc(12.5% + 0px); right: calc(12.5% + 0px);
+      height: 2px;
+      background: linear-gradient(90deg, var(--p1), var(--p2), var(--gold));
+      z-index: 0; opacity: .5;
+    }
+    .proc-step { text-align: center; padding: 0 12px; position: relative; z-index: 1; }
+    .proc-num {
+      width: 70px; height: 70px; border-radius: 50%;
+      background: var(--pg); color: #fff;
+      font-size: 1.4rem; font-weight: 900;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 0 30px var(--glow-p);
+    }
+    .proc-step h3 { font-size: .93rem; font-weight: 700; margin-bottom: 6px; color: var(--text); }
+    .proc-step p  { font-size: .82rem; color: var(--muted); }
+
+    /* ════════════════════════════
+       PRICES
+    ════════════════════════════ */
+    .prices-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; }
+    .price-card.glass { padding: 32px 28px; position: relative; overflow: hidden; }
+    .price-card.popular {
+      border-color: rgba(124,58,237,.5) !important;
+      box-shadow: 0 0 60px rgba(124,58,237,.15), 0 0 0 1px rgba(124,58,237,.25) !important;
+    }
+    .price-card.popular::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(124,58,237,.08), rgba(79,70,229,.05));
+      pointer-events: none;
+    }
+    .pop-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--pg); color: #fff;
+      border-radius: 20px; padding: 4px 14px;
+      font-size: .73rem; font-weight: 700; margin-bottom: 18px;
+    }
+    .pc-icon { font-size: 2rem; margin-bottom: 14px; }
+    .pc-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 6px; }
+    .pc-desc  { font-size: .85rem; color: var(--muted); margin-bottom: 20px; }
+    .pc-price {
+      font-size: 1.8rem; font-weight: 900; letter-spacing: -1px;
+      background: var(--pg);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 4px;
+    }
+    .pc-price span { font-size: .82rem; font-weight: 400; color: var(--muted); -webkit-text-fill-color: var(--muted); }
+    .pc-hr { height: 1px; background: var(--border); margin: 20px 0; }
+    .pc-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .pc-list li {
+      font-size: .86rem; color: var(--muted);
+      display: flex; align-items: flex-start; gap: 10px;
+    }
+    .pc-list li::before { content: '✓'; color: var(--gold); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+    .pc-btn {
+      display: block; text-align: center; margin-top: 26px;
+      padding: 13px; border-radius: 12px;
+      font-weight: 700; font-size: .93rem; text-decoration: none;
+      transition: opacity .2s, transform .2s;
+    }
+    .price-card.popular .pc-btn {
+      background: var(--pg); color: #fff;
+      box-shadow: 0 0 24px var(--glow-p);
+    }
+    .price-card:not(.popular) .pc-btn {
+      background: transparent; border: 1px solid var(--border-h); color: var(--text);
+    }
+    .pc-btn:hover { opacity: .85; transform: translateY(-1px); }
+
+    /* ════════════════════════════
+       PORTFOLIO
+    ════════════════════════════ */
+    .portfolio-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+    .port-item {
+      border-radius: var(--r2); overflow: hidden; position: relative;
+      aspect-ratio: 4/3; cursor: pointer;
+      background: var(--bg3); border: 1px solid var(--border);
+    }
+    .port-item.tall { grid-row: span 2; aspect-ratio: auto; min-height: 280px; }
+    .port-bg {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3.2rem; transition: transform .4s ease;
+    }
+    .port-item:hover .port-bg { transform: scale(1.1); }
+    .port-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(8,8,15,.9) 0%, transparent 55%);
+      display: flex; align-items: flex-end; padding: 18px;
+      opacity: 0; transition: opacity .3s;
+    }
+    .port-item:hover .port-overlay { opacity: 1; }
+    .port-label { color: #fff; font-weight: 600; font-size: .88rem; }
+
+    /* ════════════════════════════
+       REVIEWS
+    ════════════════════════════ */
+    .reviews-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
+    .review-card.glass { padding: 26px 22px; }
+    .stars { color: var(--gold); font-size: 1rem; margin-bottom: 14px; letter-spacing: 2px; }
+    .review-text {
+      font-size: .88rem; color: var(--muted); line-height: 1.7;
+      font-style: italic; margin-bottom: 20px;
+    }
+    .reviewer { display: flex; align-items: center; gap: 12px; }
+    .rev-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--pg);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: .95rem; flex-shrink: 0;
+    }
+    .rev-name { font-weight: 700; font-size: .88rem; color: var(--text); }
+    .rev-meta { font-size: .75rem; color: var(--muted2); margin-top: 2px; }
+
+    /* ════════════════════════════
+       FORM SECTION
+    ════════════════════════════ */
+    .form-strip { background: var(--bg2); border-top: 1px solid var(--border); }
+    .form-inner { max-width: 1160px; margin: 0 auto; padding: 96px 48px; }
+    .form-inner h2 { color: var(--text); }
+    .form-inner .section-sub { color: var(--muted); }
+    .form-wrap { display: grid; grid-template-columns: 1fr 1.5fr; gap: 56px; align-items: start; }
+
+    .fi-item { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 28px; }
+    .fi-icon {
+      width: 46px; height: 46px; border-radius: 12px;
+      background: linear-gradient(135deg, rgba(124,58,237,.3), rgba(79,70,229,.2));
+      border: 1px solid rgba(124,58,237,.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; flex-shrink: 0;
+    }
+    .fi-label { font-size: .75rem; color: var(--muted2); text-transform: uppercase; letter-spacing: .5px; }
+    .fi-value { color: var(--text); font-weight: 600; font-size: .93rem; margin-top: 3px; }
+
+    form {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--r2); padding: 36px 32px;
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    }
+    .form-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 26px; letter-spacing: -.3px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label {
+      display: block; font-size: .75rem; font-weight: 700;
+      color: var(--muted2); margin-bottom: 6px;
+      text-transform: uppercase; letter-spacing: .5px;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%; padding: 12px 15px;
+      background: rgba(255,255,255,.05); border: 1px solid var(--border);
+      border-radius: 10px; color: var(--text);
+      font-size: .9rem; font-family: inherit; outline: none;
+      transition: border-color .2s, background .2s, box-shadow .2s;
+      -webkit-appearance: none;
+    }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color: var(--muted2); }
+    .form-group select option { background: var(--bg3); color: var(--text); }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--p1);
+      background: rgba(124,58,237,.08);
+      box-shadow: 0 0 0 3px rgba(124,58,237,.15);
+    }
+    textarea { resize: vertical; min-height: 95px; }
+
+    .services-check { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px; }
+    .check-item {
+      display: flex; align-items: center; gap: 9px;
+      padding: 9px 12px; border: 1px solid var(--border);
+      border-radius: 10px; cursor: pointer; font-size: .83rem; color: var(--muted);
+      background: rgba(255,255,255,.03);
+      transition: border-color .2s, background .2s, color .2s;
+    }
+    .check-item:has(input:checked) {
+      border-color: rgba(124,58,237,.5);
+      background: rgba(124,58,237,.12); color: var(--text);
+    }
+    .check-item input { accent-color: var(--p1); width: 15px; height: 15px; }
+
+    .form-submit {
+      width: 100%; padding: 14px; margin-top: 6px;
+      background: var(--pg); color: #fff; border: none;
+      border-radius: 12px; font-size: 1rem; font-weight: 700;
+      cursor: pointer; letter-spacing: .2px;
+      box-shadow: 0 0 28px var(--glow-p);
+      transition: opacity .2s, transform .15s;
+    }
+    .form-submit:hover { opacity: .88; transform: translateY(-1px); }
+    .form-note { font-size: .75rem; color: var(--muted2); text-align: center; margin-top: 12px; }
+
+    /* ════════════════════════════
+       FOOTER
+    ════════════════════════════ */
+    footer {
+      background: var(--bg); border-top: 1px solid var(--border);
+      padding: 36px 48px;
+    }
+    .footer-inner {
+      max-width: 1160px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 20px;
+    }
+    .footer-logo { font-weight: 800; font-size: 1.05rem; color: var(--text); }
+    .footer-logo span { color: var(--gold); }
+    .footer-links { display: flex; gap: 22px; flex-wrap: wrap; }
+    .footer-links a { color: var(--muted2); text-decoration: none; font-size: .83rem; transition: color .2s; }
+    .footer-links a:hover { color: var(--text); }
+    .footer-copy { font-size: .8rem; color: var(--muted2); }
+
+    /* ════════════════════════════
+       CHAT WIDGET
+    ════════════════════════════ */
+    .chat-widget {
+      position: fixed; bottom: 28px; right: 28px; z-index: 9999;
+      display: flex; flex-direction: column; align-items: flex-end; gap: 12px;
+    }
+    .chat-toggle {
+      width: 60px; height: 60px; border-radius: 50%; border: none; cursor: pointer;
+      background: var(--pg);
+      display: flex; align-items: center; justify-content: center; font-size: 1.45rem;
+      box-shadow: 0 0 32px var(--glow-p);
+      position: relative; transition: transform .25s, box-shadow .25s;
+    }
+    .chat-toggle:hover { transform: scale(1.1); box-shadow: 0 0 48px var(--glow-p); }
+    .chat-close-icon { display: none; font-size: 1rem; font-weight: 700; color: #fff; }
+    .chat-open-icon  { color: #fff; }
+    .chat-widget.open .chat-open-icon  { display: none; }
+    .chat-widget.open .chat-close-icon { display: block; }
+    .chat-badge {
+      position: absolute; top: 0; right: 0;
+      background: #ef4444; color: #fff;
+      width: 20px; height: 20px; border-radius: 50%;
+      font-size: .7rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      animation: cpulse 2s infinite; border: 2px solid var(--bg);
+    }
+    .chat-badge.hidden { display: none; }
+    @keyframes cpulse { 0%,100%{ transform:scale(1);} 50%{ transform:scale(1.25);} }
+
+    .chat-window {
+      width: 360px; background: var(--bg2);
+      border: 1px solid var(--border); border-radius: 20px;
+      box-shadow: 0 24px 80px rgba(0,0,0,.5), 0 0 0 1px rgba(124,58,237,.1);
+      display: flex; flex-direction: column;
+      overflow: hidden; max-height: 540px;
+      transform: scale(.85) translateY(20px); opacity: 0; pointer-events: none;
+      transition: transform .3s cubic-bezier(.34,1.56,.64,1), opacity .25s;
+      transform-origin: bottom right;
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    }
+    .chat-widget.open .chat-window {
+      transform: scale(1) translateY(0); opacity: 1; pointer-events: all;
+    }
+    .chat-header {
+      background: var(--pg); padding: 14px 16px;
+      display: flex; align-items: center; gap: 12px; flex-shrink: 0;
+    }
+    .chat-avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: rgba(255,255,255,.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; flex-shrink: 0;
+    }
+    .chat-name   { color: #fff; font-weight: 700; font-size: .92rem; }
+    .chat-status { color: rgba(255,255,255,.75); font-size: .72rem; margin-top: 2px; }
+    .chat-hmin {
+      margin-left: auto; background: rgba(255,255,255,.15); border: none;
+      color: #fff; font-size: 1rem; cursor: pointer;
+      width: 28px; height: 28px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s;
+    }
+    .chat-hmin:hover { background: rgba(255,255,255,.28); }
+
+    .chat-messages {
+      flex: 1; overflow-y: auto; padding: 14px 14px 8px;
+      display: flex; flex-direction: column; gap: 10px; scroll-behavior: smooth;
+    }
+    .chat-messages::-webkit-scrollbar { width: 4px; }
+    .chat-messages::-webkit-scrollbar-thumb { background: var(--border-h); border-radius: 4px; }
+
+    .chat-msg { max-width: 88%; display: flex; flex-direction: column; gap: 3px; }
+    .chat-msg.bot  { align-self: flex-start; }
+    .chat-msg.user { align-self: flex-end; }
+    .chat-bubble {
+      padding: 10px 13px; border-radius: 16px;
+      font-size: .85rem; line-height: 1.55; white-space: pre-wrap;
+    }
+    .chat-msg.bot .chat-bubble {
+      background: rgba(255,255,255,.06); border: 1px solid var(--border);
+      border-bottom-left-radius: 4px; color: var(--text);
+    }
+    .chat-msg.user .chat-bubble {
+      background: var(--pg); color: #fff;
+      border-bottom-right-radius: 4px; font-weight: 600;
+    }
+    .chat-time { font-size: .67rem; color: var(--muted2); padding: 0 3px; }
+    .chat-msg.user .chat-time { text-align: right; }
+
+    .typing-bbl {
+      background: rgba(255,255,255,.06); border: 1px solid var(--border);
+      border-radius: 16px; border-bottom-left-radius: 4px;
+      padding: 12px 16px; display: flex; gap: 5px; align-items: center;
+      align-self: flex-start;
+    }
+    .typing-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--muted); animation: tbounce 1.2s infinite;
+    }
+    .typing-dot:nth-child(2) { animation-delay: .2s; }
+    .typing-dot:nth-child(3) { animation-delay: .4s; }
+    @keyframes tbounce { 0%,60%,100%{ transform:translateY(0);} 30%{ transform:translateY(-7px);} }
+
+    .chat-quick {
+      padding: 8px 12px 10px; display: flex; flex-wrap: wrap; gap: 6px;
+      border-top: 1px solid var(--border); flex-shrink: 0;
+      max-height: 110px; overflow-y: auto;
+    }
+    .chat-qbtn {
+      background: rgba(255,255,255,.05); border: 1px solid var(--border);
+      color: var(--text); border-radius: 20px;
+      padding: 6px 12px; font-size: .77rem; font-weight: 600;
+      cursor: pointer; white-space: nowrap; transition: border-color .2s, background .2s;
+    }
+    .chat-qbtn:hover { border-color: rgba(124,58,237,.5); background: rgba(124,58,237,.12); }
+
+    .chat-input-row {
+      padding: 10px 12px; display: flex; gap: 8px;
+      border-top: 1px solid var(--border); flex-shrink: 0;
+    }
+    .chat-input {
+      flex: 1; padding: 9px 14px;
+      background: rgba(255,255,255,.06); border: 1px solid var(--border);
+      border-radius: 24px; font-size: .85rem; font-family: inherit;
+      color: var(--text); outline: none; transition: border-color .2s;
+    }
+    .chat-input::placeholder { color: var(--muted2); }
+    .chat-input:focus { border-color: var(--p1); }
+    .chat-send {
+      width: 37px; height: 37px; border-radius: 50%;
+      background: var(--pg); border: none; cursor: pointer;
+      color: #fff; font-size: .95rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: opacity .2s, transform .15s;
+    }
+    .chat-send:hover { opacity: .85; transform: scale(1.1); }
+
+    @media (max-width: 640px) {
+      .chat-window { width: calc(100vw - 36px); }
+      .chat-widget { bottom: 16px; right: 16px; }
+    }
+
+    /* ════════════════════════════
+       RESPONSIVE
+    ════════════════════════════ */
+    @media (max-width: 960px) {
+      header { padding: 0 20px; }
+      nav { display: none; }
+      .hero { padding: 80px 20px 60px; flex-direction: column; gap: 40px; min-height: auto; }
+      .hero-cards { grid-template-columns: repeat(4,1fr); width: 100%; }
+      .section { padding: 64px 20px; }
+      .why-inner, .form-inner { padding: 64px 20px; }
+      .divider { margin: 0 20px; }
+      .services-grid { grid-template-columns: 1fr; }
+      .service-card.featured { flex-direction: column; grid-column: span 1; }
+      .service-card.featured .sc-thumb { min-width: unset; width: 100%; height: 120px; border-right: none; border-bottom: 1px solid var(--border); }
+      .prices-grid { grid-template-columns: 1fr; }
+      .portfolio-grid { grid-template-columns: 1fr 1fr; }
+      .port-item.tall { grid-row: auto; }
+      .reviews-grid { grid-template-columns: 1fr; }
+      .form-wrap { grid-template-columns: 1fr; gap: 32px; }
+      .form-row { grid-template-columns: 1fr; }
+      .services-check { grid-template-columns: 1fr; }
+      .process-track { grid-template-columns: 1fr 1fr; }
+      .process-track::before { display: none; }
+      footer { padding: 28px 20px; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+  <a class="logo" href="#">
+    <div class="logo-icon">🏗️</div>
+    <div class="logo-text">Строй<span>Мастер</span></div>
+  </a>
+  <nav>
+    <a href="#services">Услуги</a>
+    <a href="#why">О нас</a>
+    <a href="#process">Как работаем</a>
+    <a href="#prices">Цены</a>
+    <a href="#reviews">Отзывы</a>
+    <a href="#form" class="nav-cta">Оставить заявку</a>
+  </nav>
+</header>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-orb"></div>
+  <div class="hero-text">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      Работаем с 2008 года · 16 лет опыта
+    </div>
+    <h1>Ремонт квартир<br>и <em>строительство</em><br>домов под ключ</h1>
+    <p class="hero-sub">Профессиональная отделка, капитальный ремонт и строительство частных домов в Астане и Алматы. Договор, фиксированная смета и гарантия — всегда.</p>
+    <div class="hero-btns">
+      <a href="#form" class="btn-pri">Получить смету бесплатно →</a>
+      <a href="#services" class="btn-sec">Наши услуги</a>
+    </div>
+  </div>
+  <div class="hero-cards">
+    <div class="hero-card">
+      <div class="hc-num">830+</div>
+      <div class="hc-label">объектов сдано</div>
+    </div>
+    <div class="hero-card">
+      <div class="hc-num">16</div>
+      <div class="hc-label">лет на рынке</div>
+    </div>
+    <div class="hero-card">
+      <div class="hc-num">3 года</div>
+      <div class="hc-label">гарантия</div>
+    </div>
+    <div class="hero-card">
+      <div class="hc-num">98%</div>
+      <div class="hc-label">довольных клиентов</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SERVICES ── -->
+<section class="section" id="services">
+  <div class="section-tag">✦ Услуги</div>
+  <h2>Что мы <span>делаем</span></h2>
+  <p class="section-sub">От косметического ремонта до строительства дома с нуля — полный цикл строительно-отделочных работ.</p>
+  <div class="services-grid">
+
+    <div class="service-card glass featured">
+      <div class="sc-thumb">🏠</div>
+      <div class="sc-body">
+        <div class="sc-tag">Популярное</div>
+        <h3>Ремонт и отделка квартир</h3>
+        <p>Полный цикл: от демонтажа до финишной отделки. Работаем в новостройках и вторичном жилье любой сложности.</p>
+        <ul class="sc-list">
+          <li>Косметический и капитальный ремонт</li>
+          <li>Черновая и чистовая отделка</li>
+          <li>Дизайнерский ремонт под ключ</li>
+          <li>Перепланировка и согласование</li>
+          <li>Укладка плитки, ламината, паркета</li>
+          <li>Монтаж натяжных потолков</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="service-card glass" style="display:flex;flex-direction:column">
+      <div class="sc-thumb">🏡</div>
+      <div class="sc-body">
+        <div class="sc-tag">Строительство</div>
+        <h3>Строительство домов</h3>
+        <p>Возводим частные дома из кирпича, газобетона, дерева и по каркасной технологии.</p>
+        <ul class="sc-list">
+          <li>Проектирование и геодезия</li>
+          <li>Фундамент любого типа</li>
+          <li>Стены, кровля, перекрытия</li>
+          <li>Инженерные коммуникации</li>
+          <li>Внутренняя и внешняя отделка</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="service-card glass" style="display:flex;flex-direction:column">
+      <div class="sc-thumb">🚿</div>
+      <div class="sc-body">
+        <div class="sc-tag">Отделка</div>
+        <h3>Ванные комнаты и санузлы</h3>
+        <p>Полная отделка санузлов: гидроизоляция, плитка, сантехника, вентиляция.</p>
+        <ul class="sc-list">
+          <li>Укладка плитки любой сложности</li>
+          <li>Установка душевых и ванн</li>
+          <li>Тёплые полы</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="service-card glass" style="display:flex;flex-direction:column">
+      <div class="sc-thumb">⚡</div>
+      <div class="sc-body">
+        <div class="sc-tag">Инженерия</div>
+        <h3>Инженерные системы</h3>
+        <p>Монтаж и замена электрики, водопровода, канализации и отопления.</p>
+        <ul class="sc-list">
+          <li>Электромонтаж под ключ</li>
+          <li>Замена труб и радиаторов</li>
+          <li>Тёплые полы, «умный дом»</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="service-card glass" style="display:flex;flex-direction:column">
+      <div class="sc-thumb">🪟</div>
+      <div class="sc-body">
+        <div class="sc-tag">Фасад</div>
+        <h3>Фасадные работы</h3>
+        <p>Утепление и отделка фасадов, монтаж сайдинга, штукатурка, вентфасады.</p>
+        <ul class="sc-list">
+          <li>Утепление минватой и пенопластом</li>
+          <li>Декоративная штукатурка</li>
+          <li>Монтаж сайдинга и вентфасада</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="service-card glass" style="display:flex;flex-direction:column">
+      <div class="sc-thumb">🧹</div>
+      <div class="sc-body">
+        <div class="sc-tag">Доп. услуга</div>
+        <h3>Клининг объекта</h3>
+        <p>По заявке заказчика — профессиональная уборка объекта после завершения ремонта или строительства.</p>
+        <ul class="sc-list">
+          <li>Удаление строительной пыли и мусора</li>
+          <li>Мытьё окон, дверей, плитки</li>
+          <li>Чистка напольных покрытий</li>
+          <li>Уборка санузлов и кухни</li>
+          <li>Вывоз строительного мусора</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── WHY US ── -->
+<div class="why-strip" id="why">
+  <div class="why-inner">
+    <div class="section-tag">✦ Почему мы</div>
+    <h2>Надёжный партнёр<br>в <span>строительстве</span></h2>
+    <p class="section-sub">Мы не субподрядчики — собственная бригада мастеров и полная ответственность за результат.</p>
+    <div class="why-grid">
+      <div class="why-card glass">
+        <div class="why-icon">📋</div>
+        <h3>Фиксированная смета</h3>
+        <p>Итоговая цена не меняется после подписания договора. Никаких скрытых доплат.</p>
+      </div>
+      <div class="why-card glass">
+        <div class="why-icon">🛡️</div>
+        <h3>Гарантия 3 года</h3>
+        <p>Официальная гарантия на все выполненные работы. Дефекты устраняем бесплатно.</p>
+      </div>
+      <div class="why-card glass">
+        <div class="why-icon">📅</div>
+        <h3>Соблюдаем сроки</h3>
+        <p>Дата сдачи объекта прописана в договоре. За просрочку — штраф в вашу пользу.</p>
+      </div>
+      <div class="why-card glass">
+        <div class="why-icon">📸</div>
+        <h3>Фотоотчёт онлайн</h3>
+        <p>Ежедневные фото с объекта в мессенджер. Контролируйте ход работ из любой точки.</p>
+      </div>
+      <div class="why-card glass">
+        <div class="why-icon">🧑‍🔧</div>
+        <h3>Собственная бригада</h3>
+        <p>Только штатные мастера с опытом от 5 лет. Никаких случайных людей.</p>
+      </div>
+      <div class="why-card glass">
+        <div class="why-icon">📦</div>
+        <h3>Закупка материалов</h3>
+        <p>Закупаем оптом — вы экономите 10–15% от розничной цены на материалах.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── PROCESS ── -->
+<section class="section" id="process">
+  <div class="section-tag">✦ Как работаем</div>
+  <h2>От заявки до<br><span>сдачи ключей</span></h2>
+  <p class="section-sub">Прозрачный процесс без сюрпризов на каждом этапе.</p>
+  <div class="process-track">
+    <div class="proc-step">
+      <div class="proc-num">1</div>
+      <h3>Заявка и замер</h3>
+      <p>Оставляете заявку — выезжаем бесплатно в удобное время</p>
+    </div>
+    <div class="proc-step">
+      <div class="proc-num">2</div>
+      <h3>Смета и договор</h3>
+      <p>Детальная смета, договор с фиксированной ценой и сроками</p>
+    </div>
+    <div class="proc-step">
+      <div class="proc-num">3</div>
+      <h3>Ход работ</h3>
+      <p>Работаем по графику, ежедневно отправляем фотоотчёт</p>
+    </div>
+    <div class="proc-step">
+      <div class="proc-num">4</div>
+      <h3>Сдача объекта</h3>
+      <p>Принимаете работу, подписываем акт. Уборка включена</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── PRICES ── -->
+<section class="section" id="prices">
+  <div class="section-tag">✦ Цены</div>
+  <h2>Пакеты <span>услуг</span></h2>
+  <p class="section-sub">Точная стоимость рассчитывается после бесплатного замера. Смета фиксируется в договоре.</p>
+  <div class="prices-grid">
+
+    <div class="price-card glass">
+      <div class="pc-icon">🖌️</div>
+      <div class="pc-title">Косметический ремонт</div>
+      <div class="pc-desc">Обновление без перепланировки и замены коммуникаций</div>
+      <div class="pc-price">от 12 000 ₸<span> / м²</span></div>
+      <div class="pc-hr"></div>
+      <ul class="pc-list">
+        <li>Поклейка обоев и покраска</li>
+        <li>Замена напольного покрытия</li>
+        <li>Замена розеток и выключателей</li>
+        <li>Монтаж натяжного потолка</li>
+        <li>Покраска дверей и окон</li>
+      </ul>
+      <a href="#form" class="pc-btn">Оставить заявку</a>
+    </div>
+
+    <div class="price-card glass popular">
+      <div class="pop-badge">⭐ Популярный выбор</div>
+      <div class="pc-icon">🏠</div>
+      <div class="pc-title">Капитальный ремонт</div>
+      <div class="pc-desc">Полное обновление квартиры с заменой коммуникаций</div>
+      <div class="pc-price">от 28 000 ₸<span> / м²</span></div>
+      <div class="pc-hr"></div>
+      <ul class="pc-list">
+        <li>Демонтаж и черновые работы</li>
+        <li>Замена электрики и сантехники</li>
+        <li>Штукатурка, стяжка, выравнивание</li>
+        <li>Чистовая отделка под ключ</li>
+        <li>Укладка плитки и напольных покрытий</li>
+        <li>Монтаж дверей и окон</li>
+      </ul>
+      <a href="#form" class="pc-btn">Оставить заявку</a>
+    </div>
+
+    <div class="price-card glass">
+      <div class="pc-icon">🏡</div>
+      <div class="pc-title">Строительство дома</div>
+      <div class="pc-desc">Под ключ от фундамента до внутренней отделки</div>
+      <div class="pc-price">от 130 000 ₸<span> / м²</span></div>
+      <div class="pc-hr"></div>
+      <ul class="pc-list">
+        <li>Проектирование и согласование</li>
+        <li>Фундамент, стены, кровля</li>
+        <li>Окна, двери, лестницы</li>
+        <li>Все инженерные системы</li>
+        <li>Внутренняя и внешняя отделка</li>
+        <li>Ландшафтное благоустройство</li>
+      </ul>
+      <a href="#form" class="pc-btn">Оставить заявку</a>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── PORTFOLIO ── -->
+<section class="section">
+  <div class="section-tag">✦ Портфолио</div>
+  <h2>Наши <span>работы</span></h2>
+  <p class="section-sub">Завершённые проекты в Астане и Алматы разных ценовых категорий.</p>
+  <div class="portfolio-grid">
+    <div class="port-item tall" style="background:linear-gradient(135deg,#1e1b4b,#312e81)">
+      <div class="port-bg">🏠</div>
+      <div class="port-overlay"><span class="port-label">Дом 180 м² — под ключ, Алматы</span></div>
+    </div>
+    <div class="port-item" style="background:linear-gradient(135deg,#1a1a2e,#16213e)">
+      <div class="port-bg">🛁</div>
+      <div class="port-overlay"><span class="port-label">Ванная комната — дизайнерский ремонт</span></div>
+    </div>
+    <div class="port-item" style="background:linear-gradient(135deg,#0f3460,#533483)">
+      <div class="port-bg">🍽️</div>
+      <div class="port-overlay"><span class="port-label">Кухня-гостиная 45 м²</span></div>
+    </div>
+    <div class="port-item" style="background:linear-gradient(135deg,#1e1b4b,#4c1d95)">
+      <div class="port-bg">🛋️</div>
+      <div class="port-overlay"><span class="port-label">Гостиная — капитальный ремонт, Астана</span></div>
+    </div>
+    <div class="port-item" style="background:linear-gradient(135deg,#0c0c1d,#1e1e3f)">
+      <div class="port-bg">🏗️</div>
+      <div class="port-overlay"><span class="port-label">Коттедж 220 м² — строительство</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── REVIEWS ── -->
+<section class="section" id="reviews">
+  <div class="section-tag">✦ Отзывы</div>
+  <h2>Что говорят <span>клиенты</span></h2>
+  <p class="section-sub">Реальные отзывы людей, которые доверили нам свои объекты.</p>
+  <div class="reviews-grid">
+    <div class="review-card glass">
+      <div class="stars">★★★★★</div>
+      <div class="review-text">«Делали капитальный ремонт двушки в новостройке. Смета не изменилась ни на тиын, сдали на 4 дня раньше срока. Отдельное спасибо за ежедневные фото — не переживала, живя у мамы.»</div>
+      <div class="reviewer">
+        <div class="rev-avatar">АС</div>
+        <div>
+          <div class="rev-name">Анна Смирнова</div>
+          <div class="rev-meta">Капитальный ремонт, 64 м² · Астана</div>
+        </div>
+      </div>
+    </div>
+    <div class="review-card glass">
+      <div class="stars">★★★★★</div>
+      <div class="review-text">«Строили дом 160 м² из газобетона. Ребята предложили несколько вариантов фундамента, объяснили плюсы и минусы. Дом стоит второй год, никаких трещин и проблем.»</div>
+      <div class="reviewer">
+        <div class="rev-avatar">ДК</div>
+        <div>
+          <div class="rev-name">Дмитрий Козлов</div>
+          <div class="rev-meta">Строительство дома · Алматы</div>
+        </div>
+      </div>
+    </div>
+    <div class="review-card glass">
+      <div class="stars">★★★★★</div>
+      <div class="review-text">«Переехали в квартиру с дизайнерским ремонтом — ни одного косяка за полгода эксплуатации. Мастера вежливые, приходили вовремя, убирались за собой каждый день.»</div>
+      <div class="reviewer">
+        <div class="rev-avatar">ОВ</div>
+        <div>
+          <div class="rev-name">Ольга Васильева</div>
+          <div class="rev-meta">Дизайнерский ремонт, 82 м² · Астана</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FORM ── -->
+<div class="form-strip" id="form">
+  <div class="form-inner">
+    <div class="section-tag">✦ Заявка</div>
+    <h2>Получите <span>бесплатную смету</span></h2>
+    <p class="section-sub">Замерщик выедет в течение 24 часов. Смета — бесплатно и без обязательств.</p>
+    <div class="form-wrap">
+      <div>
+        <div class="fi-item">
+          <div class="fi-icon">📞</div>
+          <div>
+            <div class="fi-label">Телефон</div>
+            <div class="fi-value">+7 (700) 555-35-35</div>
+          </div>
+        </div>
+        <div class="fi-item">
+          <div class="fi-icon">⏰</div>
+          <div>
+            <div class="fi-label">Режим работы</div>
+            <div class="fi-value">Пн–Вс с 8:00 до 21:00</div>
+          </div>
+        </div>
+        <div class="fi-item">
+          <div class="fi-icon">📍</div>
+          <div>
+            <div class="fi-label">Работаем в</div>
+            <div class="fi-value">Астане и Алматы</div>
+          </div>
+        </div>
+        <div class="fi-item">
+          <div class="fi-icon">🚗</div>
+          <div>
+            <div class="fi-label">Выезд на замер</div>
+            <div class="fi-value">Бесплатно, в течение 24 ч.</div>
+          </div>
+        </div>
+        <div class="fi-item">
+          <div class="fi-icon">💬</div>
+          <div>
+            <div class="fi-label">Мессенджеры</div>
+            <div class="fi-value">WhatsApp · Telegram</div>
+          </div>
+        </div>
+      </div>
+
+      <form onsubmit="handleSubmit(event)">
+        <div class="form-title">Заявка на расчёт стоимости</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Ваше имя *</label>
+            <input type="text" placeholder="Айгерим Сейткали" required />
+          </div>
+          <div class="form-group">
+            <label>Телефон *</label>
+            <input type="tel" placeholder="+7 (7__) ___-__-__" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Город *</label>
+            <select required>
+              <option value="" disabled selected>Выберите город</option>
+              <option>Астана</option>
+              <option>Алматы</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Площадь объекта, м²</label>
+            <input type="number" placeholder="Например: 65" min="10" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Тип услуги *</label>
+          <select required>
+            <option value="" disabled selected>Выберите услугу</option>
+            <option>Косметический ремонт квартиры</option>
+            <option>Капитальный ремонт квартиры</option>
+            <option>Дизайнерский ремонт под ключ</option>
+            <option>Ремонт ванной комнаты / санузла</option>
+            <option>Строительство дома под ключ</option>
+            <option>Строительство дома (коробка)</option>
+            <option>Фасадные работы</option>
+            <option>Инженерные системы (электрика, сантехника)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Дополнительные работы</label>
+          <div class="services-check">
+            <label class="check-item"><input type="checkbox" /> Дизайн-проект</label>
+            <label class="check-item"><input type="checkbox" /> Закупка материалов</label>
+            <label class="check-item"><input type="checkbox" /> Замена электрики</label>
+            <label class="check-item"><input type="checkbox" /> Замена сантехники</label>
+            <label class="check-item"><input type="checkbox" /> Натяжные потолки</label>
+            <label class="check-item"><input type="checkbox" /> Тёплые полы</label>
+            <label class="check-item"><input type="checkbox" /> 🧹 Клининг объекта</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Желаемые сроки</label>
+          <select>
+            <option value="" disabled selected>Выберите</option>
+            <option>Как можно скорее</option>
+            <option>В течение месяца</option>
+            <option>В течение 3 месяцев</option>
+            <option>Ориентировочно через полгода</option>
+            <option>Просто узнаю стоимость</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Комментарий или пожелания</label>
+          <textarea placeholder="Опишите задачу: особенности объекта, пожелания по материалам и т.д."></textarea>
+        </div>
+        <button type="submit" class="form-submit">Отправить заявку — бесплатный замер</button>
+        <div class="form-note">Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности. Мы не передаём данные третьим лицам.</div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ── CHAT WIDGET ── -->
+<div class="chat-widget" id="chatWidget">
+  <button class="chat-toggle" id="chatToggle" onclick="toggleChat()" aria-label="Открыть чат">
+    <span class="chat-open-icon">💬</span>
+    <span class="chat-close-icon">✕</span>
+    <span class="chat-badge" id="chatBadge">1</span>
+  </button>
+  <div class="chat-window" id="chatWindow">
+    <div class="chat-header">
+      <div class="chat-avatar">🤖</div>
+      <div>
+        <div class="chat-name">Виртуальный помощник</div>
+        <div class="chat-status">● Онлайн — отвечаю мгновенно</div>
+      </div>
+      <button class="chat-hmin" onclick="toggleChat()" aria-label="Закрыть">✕</button>
+    </div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-quick" id="chatQuick"></div>
+    <div class="chat-input-row">
+      <input class="chat-input" id="chatInput" type="text"
+        placeholder="Напишите вопрос..."
+        onkeydown="if(event.key==='Enter')sendMsg()" />
+      <button class="chat-send" onclick="sendMsg()" aria-label="Отправить">➤</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">Строй<span>Мастер</span> © 2026</div>
+    <div class="footer-links">
+      <a href="#">Политика конфиденциальности</a>
+      <a href="#">Договор оферты</a>
+      <a href="#">Реквизиты</a>
+      <a href="#form">Оставить заявку</a>
+    </div>
+    <div class="footer-copy">Лицензия СРО № 0123456. Все работы застрахованы.</div>
+  </div>
+</footer>
+
+<script>
+/* ══════════════════════════════════════════════════
+   TELEGRAM CONFIG
+   1. Создайте бота через @BotFather → получите TOKEN
+   2. Напишите боту /start, затем откройте:
+      https://api.telegram.org/bot{TOKEN}/getUpdates
+      — скопируйте "id" из поля "chat"
+   ══════════════════════════════════════════════════ */
+const TG_TOKEN = 'СЮДА_ТОКЕН_БОТА';
+const TG_CHAT  = 'СЮДА_CHAT_ID';
+
+async function sendToTelegram(data) {
+  if (TG_TOKEN.startsWith('СЮДА')) return true;
+  const text = [
+    '🏗️ <b>Новая заявка — СтройМастер</b>',
+    '',
+    `👤 <b>Имя:</b> ${data.name}`,
+    `📞 <b>Телефон:</b> ${data.phone}`,
+    `📍 <b>Город:</b> ${data.city}`,
+    `🔧 <b>Услуга:</b> ${data.service}`,
+    `📐 <b>Площадь:</b> ${data.area ? data.area + ' м²' : 'не указана'}`,
+    `⏱️ <b>Сроки:</b> ${data.deadline || 'не указаны'}`,
+    `➕ <b>Доп. работы:</b> ${data.extras || 'нет'}`,
+    `💬 <b>Комментарий:</b> ${data.comment || 'нет'}`,
+  ].join('\n');
+  const res = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chat_id: TG_CHAT, text, parse_mode: 'HTML' }),
+  });
+  return res.ok;
+}
+
+async function handleSubmit(e) {
+  e.preventDefault();
+  const form = e.target;
+  const btn  = form.querySelector('.form-submit');
+  const selects = [...form.querySelectorAll('select')];
+  const extras  = [...form.querySelectorAll('.check-item input:checked')]
+                    .map(i => i.parentElement.textContent.trim()).join(', ');
+  const data = {
+    name:     form.querySelector('input[type=text]').value.trim(),
+    phone:    form.querySelector('input[type=tel]').value.trim(),
+    city:     selects[0]?.value || '—',
+    service:  selects[1]?.value || '—',
+    area:     form.querySelector('input[type=number]').value,
+    deadline: selects[2]?.value || '—',
+    extras, comment: form.querySelector('textarea').value.trim(),
+  };
+  btn.textContent = 'Отправляю...';
+  btn.disabled = true;
+  const ok = await sendToTelegram(data);
+  if (ok) {
+    btn.textContent = '✓ Заявка принята! Перезвоним в течение 30 минут.';
+    btn.style.background = 'linear-gradient(135deg,#16a34a,#15803d)';
+    btn.style.boxShadow  = '0 0 28px rgba(34,197,94,.35)';
+  } else {
+    btn.textContent = '⚠️ Ошибка. Позвоните: +7 (700) 555-35-35';
+    btn.style.background = 'linear-gradient(135deg,#dc2626,#b91c1c)';
+    btn.disabled = false;
+  }
+}
+
+/* ══════════════════════════════════════════════════
+   CHATBOT
+   ══════════════════════════════════════════════════ */
+const SCRIPT = {
+  start: {
+    text: 'Здравствуйте! 👋\n\nЯ виртуальный помощник СтройМастера. Помогу разобраться с услугами, ценами и сроками ремонта или строительства в Астане и Алматы.\n\nЧто вас интересует?',
+    quick: ['💰 Цены', '🏠 Ремонт квартиры', '🏡 Строительство дома', '🚿 Ванная комната', '⚡ Инженерные системы', '🧹 Клининг объекта', '⏱️ Сроки', '🛡️ Гарантия', '📍 Где работаем', '📞 Контакты', '✍️ Оставить заявку'],
+  },
+  '💰 Цены': {
+    text: '💰 Стоимость работ:\n\n🖌️ Косметический ремонт\n→ от 12 000 ₸ / м²\n\n🏠 Капитальный ремонт\n→ от 28 000 ₸ / м²\n\n🏡 Строительство дома под ключ\n→ от 130 000 ₸ / м²\n\nТочная цена — после бесплатного замера. Смета фиксируется в договоре.',
+    quick: ['✍️ Оставить заявку', '🏠 Ремонт квартиры', '🏡 Строительство дома', '← Главное меню'],
+  },
+  '🏠 Ремонт квартиры': {
+    text: '🏠 Ремонт и отделка квартир:\n\n• Косметический — обои, краска, пол, потолок\n• Капитальный — полное обновление с заменой коммуникаций\n• Дизайнерский под ключ\n• Перепланировка и согласование\n• Укладка плитки, ламината, паркета\n• Монтаж натяжных потолков\n\nРаботаем в новостройках и вторичном жилье.',
+    quick: ['💰 Цены', '⏱️ Сроки', '✍️ Оставить заявку', '← Главное меню'],
+  },
+  '🏡 Строительство дома': {
+    text: '🏡 Строительство частных домов:\n\n• Проектирование и геодезия\n• Фундамент любого типа\n• Стены: кирпич, газобетон, дерево, каркас\n• Кровля и перекрытия\n• Все инженерные коммуникации\n• Внутренняя и внешняя отделка\n\nСтроим под ключ или на любом этапе.',
+    quick: ['💰 Цены', '⏱️ Сроки', '✍️ Оставить заявку', '← Главное меню'],
+  },
+  '🚿 Ванная комната': {
+    text: '🚿 Ремонт ванных комнат:\n\n• Гидроизоляция и стяжка\n• Укладка плитки любой сложности\n• Установка душевых кабин и ванн\n• Монтаж сантехники\n• Тёплые полы\n• Вентиляция и освещение\n\nПолный ремонт санузла — в среднем 3–5 недель.',
+    quick: ['💰 Цены', '✍️ Оставить заявку', '← Главное меню'],
+  },
+  '🧹 Клининг объекта': {
+    text: '🧹 Клининг объекта — дополнительная услуга по заявке заказчика:\n\n• Удаление строительной пыли и мусора\n• Мытьё окон, дверей, плитки и зеркал\n• Чистка напольных покрытий\n• Уборка санузлов и кухни\n• Вывоз строительного мусора\n\nУслуга заказывается дополнительно при оформлении заявки на ремонт или строительство. Уточните наличие и стоимость у менеджера.',
+    quick: ['✍️ Оставить заявку', '📞 Контакты', '← Главное меню'],
+  },
+  '⚡ Инженерные системы': {
+    text: '⚡ Инженерные системы:\n\n• Электромонтаж под ключ\n• Замена труб водоснабжения и канализации\n• Монтаж и замена радиаторов отопления\n• Тёплые полы (электро и водяные)\n• Умный дом — базовые сценарии\n\nВсе работы выполняют сертифицированные специалисты.',
+    quick: ['💰 Цены', '✍️ Оставить заявку', '← Главное меню'],
+  },
+  '⏱️ Сроки': {
+    text: '⏱️ Ориентировочные сроки:\n\n🖌️ Косметический ремонт 50 м²  →  3–4 нед.\n🏠 Капитальный ремонт 60 м²  →  2–4 мес.\n🚿 Ремонт ванной  →  3–5 нед.\n🏡 Строительство дома 150 м²  →  6–12 мес.\n\nСроки фиксируются в договоре. Просрочка — штраф в вашу пользу.',
+    quick: ['💰 Цены', '🛡️ Гарантия', '✍️ Оставить заявку', '← Главное меню'],
+  },
+  '🛡️ Гарантия': {
+    text: '🛡️ Наши гарантии:\n\n✅ Официальная гарантия 3 года на все работы\n✅ Дефекты устраняем бесплатно в гарантийный период\n✅ Фиксированная смета — цена не растёт\n✅ Фотоотчёт с объекта каждый день\n✅ Только штатные мастера от 5 лет опыта\n✅ Уборка после завершения включена',
+    quick: ['💰 Цены', '⏱️ Сроки', '✍️ Оставить заявку', '← Главное меню'],
+  },
+  '📍 Где работаем': {
+    text: '📍 Работаем в двух городах:\n\n🏙️ Астана — все районы\n🏙️ Алматы — все районы\n\nВыезд замерщика — бесплатно, в течение 24 часов.',
+    quick: ['📞 Контакты', '✍️ Оставить заявку', '← Главное меню'],
+  },
+  '📞 Контакты': {
+    text: '📞 Контакты СтройМастера:\n\n📱 Телефон: +7 (700) 555-35-35\n⏰ Режим работы: Пн–Вс 8:00–21:00\n💬 WhatsApp и Telegram: +7 (700) 555-35-35',
+    quick: ['✍️ Оставить заявку', '← Главное меню'],
+  },
+  '✍️ Оставить заявку': {
+    text: 'Заполните короткую форму на этой странице — займёт 2 минуты. Специалист перезвонит в течение 30 минут.',
+    quick: ['📋 Перейти к форме', '📞 Контакты', '← Главное меню'],
+    actions: {
+      '📋 Перейти к форме': () => {
+        document.getElementById('form').scrollIntoView({ behavior: 'smooth' });
+        toggleChat();
+      },
+    },
+  },
+  '← Главное меню': { redirect: 'start' },
+};
+
+const KEYWORDS = [
+  [/цен|стоим|сколько|прайс/i,      '💰 Цены'],
+  [/ремонт|отделк|квартир|косметич|капитал|дизайн/i, '🏠 Ремонт квартиры'],
+  [/дом|строит|коттедж|кирпич|каркас|фундамент/i,    '🏡 Строительство дома'],
+  [/ванн|санузел|душ|плитк/i,        '🚿 Ванная комната'],
+  [/электр|проводк|сантехник|отоплен|труб/i, '⚡ Инженерные системы'],
+  [/срок|когда|быстро|долго/i,       '⏱️ Сроки'],
+  [/гарант|качеств/i,                '🛡️ Гарантия'],
+  [/где|район|город|астана|алматы/i, '📍 Где работаем'],
+  [/контакт|телефон|номер|звон/i,    '📞 Контакты'],
+  [/клининг|уборк|чистк|мусор|пыль/i, '🧹 Клининг объекта'],
+  [/заявк|замер|записат/i,           '✍️ Оставить заявку'],
+];
+
+let chatStarted = false, chatOpen = false;
+
+function toggleChat() {
+  chatOpen = !chatOpen;
+  document.getElementById('chatWidget').classList.toggle('open', chatOpen);
+  document.getElementById('chatBadge').classList.add('hidden');
+  if (chatOpen && !chatStarted) {
+    chatStarted = true;
+    setTimeout(() => showTyping(() => renderNode('start')), 700);
+  }
+}
+
+function now() {
+  return new Date().toLocaleTimeString('ru', { hour: '2-digit', minute: '2-digit' });
+}
+function appendMsg(role, text) {
+  const box = document.getElementById('chatMessages');
+  const el  = document.createElement('div');
+  el.className = `chat-msg ${role}`;
+  el.innerHTML = `<div class="chat-bubble">${text}</div><div class="chat-time">${now()}</div>`;
+  box.appendChild(el);
+  box.scrollTop = box.scrollHeight;
+}
+function showTyping(cb) {
+  const box = document.getElementById('chatMessages');
+  const t   = document.createElement('div');
+  t.className = 'typing-bbl'; t.id = 'typingEl';
+  t.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+  box.appendChild(t); box.scrollTop = box.scrollHeight;
+  setTimeout(() => { t.remove(); cb(); }, 900 + Math.random() * 500);
+}
+function renderQuick(btns, actions = {}) {
+  const qc = document.getElementById('chatQuick');
+  qc.innerHTML = '';
+  (btns || []).forEach(label => {
+    const b = document.createElement('button');
+    b.className = 'chat-qbtn'; b.textContent = label;
+    b.onclick = () => {
+      if (actions[label]) { actions[label](); return; }
+      appendMsg('user', label); qc.innerHTML = '';
+      showTyping(() => renderNode(label));
+    };
+    qc.appendChild(b);
+  });
+}
+function renderNode(key) {
+  const node = SCRIPT[key];
+  if (!node) { appendMsg('bot', 'Не совсем понял 🙂 Выберите тему ниже.'); renderQuick(SCRIPT.start.quick); return; }
+  if (node.redirect) { renderNode(node.redirect); return; }
+  appendMsg('bot', node.text);
+  renderQuick(node.quick || [], node.actions || {});
+}
+function sendMsg() {
+  const inp = document.getElementById('chatInput');
+  const text = inp.value.trim(); if (!text) return;
+  inp.value = ''; appendMsg('user', text);
+  document.getElementById('chatQuick').innerHTML = '';
+  const match = KEYWORDS.find(([re]) => re.test(text));
+  showTyping(() => renderNode(match ? match[1] : 'start'));
+}
+</script>
+
+</body>
+</html>
