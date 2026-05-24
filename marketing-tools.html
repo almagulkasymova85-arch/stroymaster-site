@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Инструменты продвижения — СтройМастер</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:     #08080f;
+      --bg2:    #0f0f1a;
+      --bg3:    #141422;
+      --card:   rgba(255,255,255,.04);
+      --card-h: rgba(255,255,255,.07);
+      --brd:    rgba(255,255,255,.08);
+      --brd-h:  rgba(255,255,255,.18);
+      --p1:     #7c3aed;
+      --p2:     #4f46e5;
+      --pg:     linear-gradient(135deg,#7c3aed,#4f46e5);
+      --gold:   #f59e0b;
+      --gold2:  #fcd34d;
+      --cyan:   #06b6d4;
+      --green:  #22c55e;
+      --red:    #ef4444;
+      --text:   #f1f5f9;
+      --muted:  #94a3b8;
+      --muted2: #64748b;
+      --r:      12px;
+      --r2:     18px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg); color: var(--text);
+      line-height: 1.6; overflow-x: hidden;
+      display: flex; min-height: 100vh;
+    }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg2); }
+    ::-webkit-scrollbar-thumb { background: var(--p1); border-radius: 3px; }
+    ::selection { background: var(--p1); color: #fff; }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 260px; flex-shrink: 0;
+      background: var(--bg2); border-right: 1px solid var(--brd);
+      position: sticky; top: 0; height: 100vh;
+      display: flex; flex-direction: column; overflow-y: auto;
+      padding: 24px 0;
+    }
+    .sb-logo {
+      display: flex; align-items: center; gap: 10px;
+      padding: 0 20px 24px; border-bottom: 1px solid var(--brd);
+      margin-bottom: 16px;
+    }
+    .sb-logo-icon {
+      width: 34px; height: 34px; border-radius: 9px;
+      background: var(--pg); display: flex; align-items: center;
+      justify-content: center; font-size: 1.1rem;
+      box-shadow: 0 0 16px rgba(124,58,237,.4);
+    }
+    .sb-logo-text { font-size: .85rem; font-weight: 800; }
+    .sb-logo-text span { color: var(--gold); }
+    .sb-sub { font-size: .7rem; color: var(--muted2); }
+    .sb-section { padding: 8px 12px 4px; font-size: .68rem; font-weight: 700;
+      color: var(--muted2); text-transform: uppercase; letter-spacing: .8px; }
+    .sb-link {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 20px; margin: 2px 8px; border-radius: 10px;
+      cursor: pointer; font-size: .87rem; font-weight: 500;
+      color: var(--muted); text-decoration: none;
+      transition: background .2s, color .2s;
+      border: none; background: none; width: calc(100% - 16px); text-align: left;
+    }
+    .sb-link:hover { background: var(--card-h); color: var(--text); }
+    .sb-link.active {
+      background: rgba(124,58,237,.18);
+      color: var(--text); border: 1px solid rgba(124,58,237,.3);
+    }
+    .sb-icon { font-size: 1.05rem; flex-shrink: 0; }
+    .sb-badge {
+      margin-left: auto; background: var(--p1);
+      color: #fff; font-size: .65rem; font-weight: 700;
+      padding: 2px 7px; border-radius: 10px;
+    }
+    .sb-footer { margin-top: auto; padding: 16px 20px 0; border-top: 1px solid var(--brd); }
+    .sb-footer p { font-size: .75rem; color: var(--muted2); line-height: 1.6; }
+
+    /* ── MAIN ── */
+    .main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(8,8,15,.85); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--brd);
+      padding: 16px 36px; display: flex; align-items: center; gap: 16px;
+    }
+    .topbar h1 { font-size: 1.05rem; font-weight: 800; }
+    .topbar span { color: var(--muted2); font-size: .85rem; margin-left: 4px; }
+
+    /* ── CONTENT ── */
+    .content { padding: 32px 36px; flex: 1; }
+
+    /* ── SECTION ── */
+    .tool-section { display: none; }
+    .tool-section.active { display: block; }
+    .tool-section > h2 {
+      font-size: 1.5rem; font-weight: 900; letter-spacing: -.5px;
+      margin-bottom: 6px;
+    }
+    .tool-section > h2 span {
+      background: var(--pg);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .tool-desc { color: var(--muted); font-size: .9rem; margin-bottom: 28px; }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--card); border: 1px solid var(--brd);
+      border-radius: var(--r2); padding: 24px;
+      backdrop-filter: blur(16px); margin-bottom: 20px;
+    }
+    .card-title {
+      font-size: .8rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .6px;
+      color: var(--muted2); margin-bottom: 14px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .card-title::before {
+      content: ''; width: 3px; height: 14px;
+      background: var(--pg); border-radius: 2px; flex-shrink: 0;
+    }
+
+    /* ── GRID ── */
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .grid3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+
+    /* ── FORM ELEMENTS ── */
+    label.lbl {
+      display: block; font-size: .75rem; font-weight: 700;
+      color: var(--muted2); margin-bottom: 5px;
+      text-transform: uppercase; letter-spacing: .4px;
+    }
+    input[type=text], input[type=url], input[type=number],
+    select, textarea {
+      width: 100%; padding: 10px 14px;
+      background: rgba(255,255,255,.05); border: 1px solid var(--brd);
+      border-radius: 10px; color: var(--text);
+      font-size: .88rem; font-family: inherit; outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      -webkit-appearance: none;
+    }
+    input::placeholder, textarea::placeholder { color: var(--muted2); }
+    select option { background: #1a1a2e; color: var(--text); }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--p1);
+      box-shadow: 0 0 0 3px rgba(124,58,237,.15);
+    }
+    textarea { resize: vertical; min-height: 80px; }
+    .form-group { margin-bottom: 14px; }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 10px 20px; border-radius: 10px;
+      font-size: .85rem; font-weight: 700; cursor: pointer;
+      border: none; transition: opacity .2s, transform .15s;
+      font-family: inherit;
+    }
+    .btn:hover { opacity: .85; transform: translateY(-1px); }
+    .btn-primary { background: var(--pg); color: #fff; box-shadow: 0 0 20px rgba(124,58,237,.3); }
+    .btn-outline { background: transparent; border: 1px solid var(--brd-h); color: var(--text); }
+    .btn-copy   { background: rgba(6,182,212,.15); border: 1px solid rgba(6,182,212,.3); color: var(--cyan); }
+    .btn-copy:hover { background: rgba(6,182,212,.25); }
+    .btn-green  { background: rgba(34,197,94,.15); border: 1px solid rgba(34,197,94,.3); color: var(--green); }
+    .btn-sm { padding: 7px 14px; font-size: .78rem; }
+
+    /* ── OUTPUT / RESULT ── */
+    .result-box {
+      background: rgba(255,255,255,.03); border: 1px solid var(--brd);
+      border-radius: 10px; padding: 14px; font-size: .85rem;
+      color: var(--text); word-break: break-all; line-height: 1.7;
+      position: relative; min-height: 44px;
+    }
+    .result-box.mono { font-family: 'Courier New', monospace; font-size: .8rem; color: var(--gold2); }
+    .result-box .copy-btn {
+      position: absolute; top: 10px; right: 10px;
+      background: rgba(124,58,237,.2); border: 1px solid rgba(124,58,237,.3);
+      color: #a78bfa; border-radius: 7px; padding: 4px 10px;
+      font-size: .72rem; font-weight: 700; cursor: pointer;
+      transition: background .2s;
+    }
+    .result-box .copy-btn:hover { background: rgba(124,58,237,.35); }
+
+    /* ── TAGS / CHIPS ── */
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag {
+      background: rgba(124,58,237,.12); border: 1px solid rgba(124,58,237,.25);
+      color: #a78bfa; border-radius: 20px;
+      padding: 5px 13px; font-size: .78rem; font-weight: 600;
+      cursor: pointer; transition: background .2s;
+    }
+    .tag:hover { background: rgba(124,58,237,.28); }
+    .tag.gold { background: rgba(245,158,11,.12); border-color: rgba(245,158,11,.25); color: var(--gold2); }
+    .tag.cyan { background: rgba(6,182,212,.12); border-color: rgba(6,182,212,.25); color: var(--cyan); }
+    .tag.green { background: rgba(34,197,94,.12); border-color: rgba(34,197,94,.25); color: var(--green); }
+
+    /* ── POST TEMPLATE ── */
+    .post-card {
+      background: rgba(255,255,255,.03); border: 1px solid var(--brd);
+      border-radius: var(--r2); padding: 20px; margin-bottom: 14px; position: relative;
+    }
+    .post-platform {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: .72rem; font-weight: 700; padding: 3px 10px;
+      border-radius: 20px; margin-bottom: 12px;
+    }
+    .post-text { font-size: .85rem; color: var(--text); line-height: 1.75; white-space: pre-wrap; }
+    .post-actions { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+
+    /* ── TABLE ── */
+    .tbl { width: 100%; border-collapse: collapse; }
+    .tbl thead tr { background: rgba(124,58,237,.12); }
+    .tbl th {
+      padding: 11px 14px; text-align: left;
+      font-size: .75rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .5px; color: var(--muted2);
+      border-bottom: 1px solid var(--brd);
+    }
+    .tbl td {
+      padding: 11px 14px; font-size: .85rem; color: var(--text);
+      border-bottom: 1px solid rgba(255,255,255,.04);
+      vertical-align: top;
+    }
+    .tbl tbody tr:hover { background: var(--card-h); }
+    .tbl .badge {
+      display: inline-block; padding: 2px 9px; border-radius: 20px;
+      font-size: .72rem; font-weight: 700;
+    }
+    .badge-ig   { background: rgba(225,48,108,.15); color: #f9a8d4; }
+    .badge-tg   { background: rgba(0,136,204,.15);  color: #7dd3fc; }
+    .badge-wa   { background: rgba(37,211,102,.15);  color: #86efac; }
+    .badge-yt   { background: rgba(255,0,0,.12);     color: #fca5a5; }
+    .badge-2gis { background: rgba(34,197,94,.12);   color: #86efac; }
+    .badge-seo  { background: rgba(245,158,11,.12);  color: var(--gold2); }
+
+    /* ── STAT CARDS ── */
+    .stat-cards { display: grid; grid-template-columns: repeat(auto-fill,minmax(180px,1fr)); gap: 14px; margin-bottom: 24px; }
+    .stat-card {
+      background: var(--card); border: 1px solid var(--brd);
+      border-radius: var(--r2); padding: 20px 18px; text-align: center;
+    }
+    .stat-num {
+      font-size: 1.8rem; font-weight: 900; letter-spacing: -1px;
+      background: var(--pg);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .stat-label { font-size: .75rem; color: var(--muted); margin-top: 4px; }
+
+    /* ── PROGRESS ── */
+    .progress-bar {
+      height: 6px; background: rgba(255,255,255,.08);
+      border-radius: 3px; overflow: hidden; margin-top: 8px;
+    }
+    .progress-fill {
+      height: 100%; background: var(--pg); border-radius: 3px;
+      transition: width .6s ease;
+    }
+
+    /* ── ALERT ── */
+    .alert {
+      display: flex; gap: 12px; align-items: flex-start;
+      background: rgba(245,158,11,.1); border: 1px solid rgba(245,158,11,.25);
+      border-radius: var(--r); padding: 14px 16px; margin-bottom: 20px;
+      font-size: .85rem; color: var(--gold2);
+    }
+    .alert-icon { font-size: 1.1rem; flex-shrink: 0; }
+
+    /* ── SEPARATOR ── */
+    .sep { height: 1px; background: var(--brd); margin: 24px 0; }
+
+    /* ── SUCCESS TOAST ── */
+    .toast {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px);
+      background: var(--bg2); border: 1px solid rgba(34,197,94,.3);
+      color: var(--green); padding: 12px 24px; border-radius: 30px;
+      font-size: .87rem; font-weight: 700; z-index: 9999;
+      transition: transform .35s cubic-bezier(.34,1.56,.64,1), opacity .3s;
+      opacity: 0; pointer-events: none;
+      box-shadow: 0 8px 32px rgba(0,0,0,.4);
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    /* ── QR ── */
+    #qrOutput canvas, #qrOutput img { border-radius: var(--r); }
+
+    /* ── CHANNEL ICONS ── */
+    .channel-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px; background: rgba(255,255,255,.03);
+      border: 1px solid var(--brd); border-radius: var(--r);
+      margin-bottom: 10px;
+    }
+    .channel-info { display: flex; align-items: center; gap: 12px; }
+    .channel-icon { font-size: 1.4rem; }
+    .channel-name { font-weight: 600; font-size: .9rem; }
+    .channel-desc { font-size: .78rem; color: var(--muted); margin-top: 2px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      body { flex-direction: column; }
+      .sidebar { width: 100%; height: auto; position: static;
+        flex-direction: row; flex-wrap: wrap; padding: 12px; gap: 4px; }
+      .sb-logo, .sb-section, .sb-footer { display: none; }
+      .sb-link { padding: 8px 12px; margin: 0; width: auto; }
+      .content { padding: 20px; }
+      .topbar { padding: 14px 20px; }
+      .grid2, .grid3 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-logo-icon">🏗️</div>
+    <div>
+      <div class="sb-logo-text">Строй<span>Мастер</span></div>
+      <div class="sb-sub">Инструменты продвижения</div>
+    </div>
+  </div>
+
+  <div class="sb-section">Трафик и ссылки</div>
+  <button class="sb-link active" onclick="show('utm')">
+    <span class="sb-icon">🔗</span> UTM-генератор
+  </button>
+  <button class="sb-link" onclick="show('qr')">
+    <span class="sb-icon">📲</span> QR-код на сайт
+  </button>
+
+  <div class="sb-section">Контент</div>
+  <button class="sb-link" onclick="show('posts')">
+    <span class="sb-icon">📱</span> Посты для соцсетей
+    <span class="sb-badge">10</span>
+  </button>
+  <button class="sb-link" onclick="show('hashtags')">
+    <span class="sb-icon">#️⃣</span> Хэштеги
+  </button>
+  <button class="sb-link" onclick="show('ads')">
+    <span class="sb-icon">📣</span> Объявления
+    <span class="sb-badge">6</span>
+  </button>
+  <button class="sb-link" onclick="show('calendar')">
+    <span class="sb-icon">📅</span> Контент-план
+  </button>
+
+  <div class="sb-section">Оптимизация</div>
+  <button class="sb-link" onclick="show('seo')">
+    <span class="sb-icon">🔍</span> SEO-пакет
+  </button>
+  <button class="sb-link" onclick="show('channels')">
+    <span class="sb-icon">📡</span> Каналы продвижения
+  </button>
+
+  <div class="sb-footer">
+    <p>Все инструменты работают офлайн.<br>Данные не передаются на серверы.</p>
+  </div>
+</aside>
+
+<!-- ══ MAIN ══ -->
+<main class="main">
+  <div class="topbar">
+    <h1 id="topTitle">🔗 UTM-генератор</h1>
+    <span id="topDesc">— создание отслеживаемых ссылок для рекламных кампаний</span>
+  </div>
+
+  <div class="content">
+
+    <!-- ════ UTM ════ -->
+    <div class="tool-section active" id="sec-utm">
+      <h2>UTM-<span>генератор</span></h2>
+      <p class="tool-desc">Создавайте отслеживаемые ссылки для каждого канала рекламы. Вставьте UTM-ссылку в рекламу — и Google Analytics / Яндекс.Метрика покажет, откуда пришёл клиент.</p>
+
+      <div class="grid2">
+        <div class="card">
+          <div class="card-title">Параметры ссылки</div>
+          <div class="form-group">
+            <label class="lbl">URL сайта *</label>
+            <input type="url" id="utm-url" placeholder="https://стройmaster.kz" value="https://стройmaster.kz" />
+          </div>
+          <div class="form-group">
+            <label class="lbl">Источник (utm_source) *</label>
+            <select id="utm-source" onchange="utmSourceChange(this)">
+              <option value="instagram">Instagram</option>
+              <option value="telegram">Telegram</option>
+              <option value="whatsapp">WhatsApp</option>
+              <option value="google">Google</option>
+              <option value="yandex">Яндекс</option>
+              <option value="2gis">2GIS</option>
+              <option value="kaspi">Kaspi</option>
+              <option value="olx">OLX</option>
+              <option value="custom">Свой вариант</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="lbl">Тип трафика (utm_medium) *</label>
+            <select id="utm-medium">
+              <option value="social">social</option>
+              <option value="cpc">cpc (платная реклама)</option>
+              <option value="organic">organic</option>
+              <option value="messenger">messenger</option>
+              <option value="referral">referral</option>
+              <option value="email">email</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="lbl">Кампания (utm_campaign) *</label>
+            <input type="text" id="utm-campaign" placeholder="remont_kvartir_astana" value="remont_kvartir_astana" />
+          </div>
+          <div class="form-group">
+            <label class="lbl">Контент (utm_content) — необязательно</label>
+            <input type="text" id="utm-content" placeholder="banner_top / post_01 / story" />
+          </div>
+          <button class="btn btn-primary" onclick="generateUTM()">Сгенерировать ссылку →</button>
+        </div>
+
+        <div>
+          <div class="card">
+            <div class="card-title">Готовая UTM-ссылка</div>
+            <div class="result-box mono" id="utm-result" style="min-height:64px">
+              Заполните форму и нажмите «Сгенерировать»
+            </div>
+            <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+              <button class="btn btn-copy btn-sm" onclick="copyText('utm-result')">📋 Копировать</button>
+              <button class="btn btn-outline btn-sm" onclick="shortUtm()">⚡ Укоротить (bit.ly)</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Быстрые шаблоны кампаний</div>
+            <div class="tags">
+              <span class="tag" onclick="applyTemplate('instagram','social','remont_kvartir')">Instagram — ремонт</span>
+              <span class="tag" onclick="applyTemplate('telegram','messenger','stroitelstvo_domov')">Telegram — строительство</span>
+              <span class="tag gold" onclick="applyTemplate('google','cpc','kapitalnyy_remont')">Google Ads — капремонт</span>
+              <span class="tag gold" onclick="applyTemplate('yandex','cpc','remont_astana')">Яндекс — Астана</span>
+              <span class="tag cyan" onclick="applyTemplate('2gis','referral','remont_almatы')">2GIS — Алматы</span>
+              <span class="tag green" onclick="applyTemplate('whatsapp','messenger','zayavka_forma')">WhatsApp — заявка</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Таблица UTM для всех каналов</div>
+            <div id="utm-table-output" style="font-size:.78rem;color:var(--muted)">
+              Нажмите «Сгенерировать» — таблица обновится автоматически
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ QR ════ -->
+    <div class="tool-section" id="sec-qr">
+      <h2>QR-код <span>на сайт</span></h2>
+      <p class="tool-desc">Разместите QR-код на визитках, баннерах, листовках и транспорте. Клиент сканирует — и попадает прямо на сайт или форму заявки.</p>
+      <div class="grid2">
+        <div class="card">
+          <div class="card-title">Настройки QR-кода</div>
+          <div class="form-group">
+            <label class="lbl">Ссылка для QR-кода</label>
+            <select id="qr-preset" onchange="qrPresetChange(this)">
+              <option value="https://стройmaster.kz">Главная страница сайта</option>
+              <option value="https://стройmaster.kz#form">Форма заявки</option>
+              <option value="https://стройmaster.kz#prices">Раздел с ценами</option>
+              <option value="https://wa.me/77005553535">WhatsApp</option>
+              <option value="https://t.me/stroymaster_kz">Telegram</option>
+              <option value="custom">Своя ссылка...</option>
+            </select>
+          </div>
+          <div class="form-group" id="qr-custom-wrap" style="display:none">
+            <label class="lbl">Своя ссылка</label>
+            <input type="url" id="qr-custom" placeholder="https://..." />
+          </div>
+          <div class="form-group">
+            <label class="lbl">Размер (пиксели)</label>
+            <select id="qr-size">
+              <option value="160">160×160 — для экрана</option>
+              <option value="256" selected>256×256 — стандарт</option>
+              <option value="400">400×400 — для печати</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" onclick="generateQR()">Сгенерировать QR-код →</button>
+        </div>
+        <div class="card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px">
+          <div id="qrOutput" style="padding:16px;background:#fff;border-radius:14px;display:inline-block;min-width:80px;min-height:80px;display:flex;align-items:center;justify-content:center">
+            <span style="color:#999;font-size:.85rem">QR-код появится здесь</span>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
+            <button class="btn btn-copy btn-sm" onclick="downloadQR()">💾 Скачать PNG</button>
+            <button class="btn btn-outline btn-sm" onclick="generateQR()">🔄 Обновить</button>
+          </div>
+          <div style="font-size:.78rem;color:var(--muted);text-align:center">
+            Для печати используйте размер 400×400 или больше.<br>Скачайте PNG и вставьте в макет.
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Где разместить QR-код</div>
+        <div class="grid3" style="gap:12px">
+          <div style="background:rgba(255,255,255,.03);border:1px solid var(--brd);border-radius:var(--r);padding:14px">
+            <div style="font-size:1.5rem;margin-bottom:8px">🖨️</div>
+            <div style="font-weight:700;font-size:.88rem;margin-bottom:4px">Печатные материалы</div>
+            <div style="font-size:.78rem;color:var(--muted)">Визитки, листовки, буклеты, флаеры</div>
+          </div>
+          <div style="background:rgba(255,255,255,.03);border:1px solid var(--brd);border-radius:var(--r);padding:14px">
+            <div style="font-size:1.5rem;margin-bottom:8px">🚗</div>
+            <div style="font-weight:700;font-size:.88rem;margin-bottom:4px">Транспорт и техника</div>
+            <div style="font-size:.78rem;color:var(--muted)">На машинах, спецтехнике, строительных касках</div>
+          </div>
+          <div style="background:rgba(255,255,255,.03);border:1px solid var(--brd);border-radius:var(--r);padding:14px">
+            <div style="font-size:1.5rem;margin-bottom:8px">🏗️</div>
+            <div style="font-weight:700;font-size:.88rem;margin-bottom:4px">Объект строительства</div>
+            <div style="font-size:.78rem;color:var(--muted)">Баннер на объекте, забор, вывеска</div>
+          </div>
+          <div style="background:rgba(255,255,255,.03);border:1px solid var(--brd);border-radius:var(--r);padding:14px">
+            <div style="font-size:1.5rem;margin-bottom:8px">🪟</div>
+            <div style="font-weight:700;font-size:.88rem;margin-bottom:4px">Витрина / офис</div>
+            <div style="font-size:.78rem;color:var(--muted)">Наклейка на стекло, стенд в офисе</div>
+          </div>
+          <div style="background:rgba(255,255,255,.03);border:1px solid var(--brd);border-radius:var(--r);padding:14px">
+            <div style="font-size:1.5rem;margin-bottom:8px">📦</div>
+            <div style="font-weight:700;font-size:.88rem;margin-bottom:4px">Упаковка и инвентарь</div>
+            <div style="font-size:.78rem;color:var(--muted)">На спецодежде, инструментах, коробках</div>
+          </div>
+          <div style="background:rgba(255,255,255,.03);border:1px solid var(--brd);border-radius:var(--r);padding:14px">
+            <div style="font-size:1.5rem;margin-bottom:8px">📧</div>
+            <div style="font-weight:700;font-size:.88rem;margin-bottom:4px">Email и мессенджеры</div>
+            <div style="font-size:.78rem;color:var(--muted)">Подпись в письмах, PDF-смета, счёт</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ POSTS ════ -->
+    <div class="tool-section" id="sec-posts">
+      <h2>Готовые <span>посты</span></h2>
+      <p class="tool-desc">10 готовых постов для Instagram, Telegram и WhatsApp. Нажмите «Копировать» и вставляйте в свой аккаунт.</p>
+
+      <div class="card" style="margin-bottom:20px">
+        <div class="card-title">Фильтр по платформе</div>
+        <div class="tags">
+          <span class="tag" id="f-all" onclick="filterPosts('all')" style="background:rgba(124,58,237,.25)">Все платформы</span>
+          <span class="tag" onclick="filterPosts('instagram')">📸 Instagram</span>
+          <span class="tag" onclick="filterPosts('telegram')">✈️ Telegram</span>
+          <span class="tag" onclick="filterPosts('whatsapp')">💬 WhatsApp</span>
+          <span class="tag" onclick="filterPosts('2gis')">📍 2GIS</span>
+        </div>
+      </div>
+
+      <div id="posts-container"></div>
+    </div>
+
+    <!-- ════ HASHTAGS ════ -->
+    <div class="tool-section" id="sec-hashtags">
+      <h2><span>#</span> Хэштеги</h2>
+      <p class="tool-desc">Готовые наборы хэштегов для Instagram. Нажмите на набор — он скопируется в буфер обмена.</p>
+
+      <div class="grid2">
+        <div>
+          <div class="card">
+            <div class="card-title">🏠 Ремонт квартир — Астана</div>
+            <div class="result-box" id="h1" style="font-size:.82rem;line-height:2;cursor:pointer" onclick="copyText('h1')">
+              #ремонтастана #ремонтквартирастана #отделкаастана #капитальныйремонт #ремонтподключ #ремонтквартир #отделкаквартиры #ремонтвнурсултане #интерьерастана #новостройкаастана #ремонт2025 #дизайнинтерьера #стройматериалы #прорабастана #бригадаремонт
+            </div>
+            <button class="btn btn-copy btn-sm" style="margin-top:10px" onclick="copyText('h1')">📋 Копировать набор</button>
+          </div>
+          <div class="card">
+            <div class="card-title">🏠 Ремонт квартир — Алматы</div>
+            <div class="result-box" id="h2" style="font-size:.82rem;line-height:2;cursor:pointer" onclick="copyText('h2')">
+              #ремонталматы #ремонтквартиралматы #отделкаалматы #ремонтподключалматы #капремонталматы #прорабалматы #интерьералматы #новостройкаалматы #дизайнинтерьераалматы #ремонт2025 #бригадаалматы #отделочныеработы #стройкаалматы #ремонтвалматы
+            </div>
+            <button class="btn btn-copy btn-sm" style="margin-top:10px" onclick="copyText('h2')">📋 Копировать набор</button>
+          </div>
+          <div class="card">
+            <div class="card-title">🏡 Строительство домов</div>
+            <div class="result-box" id="h3" style="font-size:.82rem;line-height:2;cursor:pointer" onclick="copyText('h3')">
+              #строительстводомов #строительствоказахстан #домподключ #частныйдом #строймастер #строительствоастана #строительствоалматы #дом2025 #коттедж #загородныйдом #газобетон #каркасныйдом #кирпичныйдом #фундамент #кровля #строительнаякомпания
+            </div>
+            <button class="btn btn-copy btn-sm" style="margin-top:10px" onclick="copyText('h3')">📋 Копировать набор</button>
+          </div>
+        </div>
+        <div>
+          <div class="card">
+            <div class="card-title">🚿 Ванная комната и санузел</div>
+            <div class="result-box" id="h4" style="font-size:.82rem;line-height:2;cursor:pointer" onclick="copyText('h4')">
+              #ремонтванной #плитка #укладкаплитки #ванная #санузел #ремонтсанузла #гидроизоляция #теплыйпол #душеваякабина #дизайнванной #плиточникастана #плиточникалматы #ванная2025 #интерьерванной
+            </div>
+            <button class="btn btn-copy btn-sm" style="margin-top:10px" onclick="copyText('h4')">📋 Копировать набор</button>
+          </div>
+          <div class="card">
+            <div class="card-title">⚡ Электрика и инженерия</div>
+            <div class="result-box" id="h5" style="font-size:.82rem;line-height:2;cursor:pointer" onclick="copyText('h5')">
+              #электрик #электромонтаж #замена проводки #электрикастана #электрикалматы #сантехник #сантехникастана #отопление #теплыйпол #умныйдом #инженерныесистемы
+            </div>
+            <button class="btn btn-copy btn-sm" style="margin-top:10px" onclick="copyText('h5')">📋 Копировать набор</button>
+          </div>
+          <div class="card">
+            <div class="card-title">🌟 Универсальные (для любого поста)</div>
+            <div class="result-box" id="h6" style="font-size:.82rem;line-height:2;cursor:pointer" onclick="copyText('h6')">
+              #строймастер #ремонтказахстан #строительствоказахстан #ремонтподключ #гарантия3года #фиксированнаяцена #бесплатнаясмета #профессиональныйремонт #качественныйремонт #надёжнаябригада #ремонтфото #доипосле #beforeafter
+            </div>
+            <button class="btn btn-copy btn-sm" style="margin-top:10px" onclick="copyText('h6')">📋 Копировать набор</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🔧 Конструктор хэштегов</div>
+        <div class="grid2">
+          <div>
+            <div class="form-group">
+              <label class="lbl">Тип услуги</label>
+              <select id="ht-service">
+                <option>ремонт квартир</option>
+                <option>строительство дома</option>
+                <option>ремонт ванной</option>
+                <option>электромонтаж</option>
+                <option>отделка фасада</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="lbl">Город</label>
+              <select id="ht-city">
+                <option>Астана</option>
+                <option>Алматы</option>
+              </select>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="buildHashtags()">Собрать хэштеги</button>
+          </div>
+          <div>
+            <div class="result-box mono" id="ht-result" style="min-height:100px">
+              Результат появится здесь
+            </div>
+            <button class="btn btn-copy btn-sm" style="margin-top:8px" onclick="copyText('ht-result')">📋 Копировать</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ ADS ════ -->
+    <div class="tool-section" id="sec-ads">
+      <h2>Готовые <span>объявления</span></h2>
+      <p class="tool-desc">Рекламные тексты для OLX, Kaspi Объявления, 2GIS, Google Ads и Яндекс. Просто скопируйте и разместите.</p>
+
+      <div id="ads-container"></div>
+    </div>
+
+    <!-- ════ CALENDAR ════ -->
+    <div class="tool-section" id="sec-calendar">
+      <h2>Контент-<span>план</span></h2>
+      <p class="tool-desc">Готовый план публикаций на месяц. Публикуйте по расписанию — алгоритмы продвигают регулярные аккаунты лучше.</p>
+
+      <div class="stat-cards">
+        <div class="stat-card"><div class="stat-num">28</div><div class="stat-label">постов в месяц</div></div>
+        <div class="stat-card"><div class="stat-num">7</div><div class="stat-label">постов в неделю</div></div>
+        <div class="stat-card"><div class="stat-num">4</div><div class="stat-label">платформы</div></div>
+        <div class="stat-card"><div class="stat-num">+65%</div><div class="stat-label">рост охвата</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Оптимальное время публикаций</div>
+        <div class="grid3">
+          <div>
+            <div class="tags"><span class="tag" style="width:100%;justify-content:center">📸 Instagram</span></div>
+            <div style="margin-top:10px;font-size:.85rem;color:var(--muted)">
+              <div style="margin-bottom:6px">🌅 <strong style="color:var(--text)">08:00–09:00</strong> — утро</div>
+              <div style="margin-bottom:6px">🌞 <strong style="color:var(--text)">12:00–13:00</strong> — обед</div>
+              <div>🌙 <strong style="color:var(--text)">19:00–21:00</strong> — вечер</div>
+            </div>
+          </div>
+          <div>
+            <div class="tags"><span class="tag cyan" style="width:100%;justify-content:center">✈️ Telegram</span></div>
+            <div style="margin-top:10px;font-size:.85rem;color:var(--muted)">
+              <div style="margin-bottom:6px">🌅 <strong style="color:var(--text)">09:00–10:00</strong> — утро</div>
+              <div style="margin-bottom:6px">🌞 <strong style="color:var(--text)">13:00–14:00</strong> — обед</div>
+              <div>🌙 <strong style="color:var(--text)">20:00–22:00</strong> — вечер</div>
+            </div>
+          </div>
+          <div>
+            <div class="tags"><span class="tag green" style="width:100%;justify-content:center">💬 WhatsApp</span></div>
+            <div style="margin-top:10px;font-size:.85rem;color:var(--muted)">
+              <div style="margin-bottom:6px">🌅 <strong style="color:var(--text)">10:00–11:00</strong> — начало дня</div>
+              <div style="margin-bottom:6px">🌞 <strong style="color:var(--text)">14:00–15:00</strong> — после обеда</div>
+              <div>🌙 <strong style="color:var(--text)">18:00–19:00</strong> — вечер</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="overflow-x:auto">
+        <div class="card-title">Контент-план на месяц — неделя за неделей</div>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Неделя / День</th>
+              <th>Тема поста</th>
+              <th>Платформа</th>
+              <th>Тип контента</th>
+              <th>Цель</th>
+            </tr>
+          </thead>
+          <tbody id="calendar-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ════ SEO ════ -->
+    <div class="tool-section" id="sec-seo">
+      <h2>SEO-<span>пакет</span></h2>
+      <p class="tool-desc">Готовые мета-теги, ключевые слова и структура для поисковой оптимизации сайта. Скопируйте и вставьте в &lt;head&gt; вашего сайта.</p>
+
+      <div class="grid2">
+        <div>
+          <div class="card">
+            <div class="card-title">Мета-теги для &lt;head&gt;</div>
+            <div class="result-box mono" id="seo-meta" style="min-height:200px;font-size:.75rem;line-height:1.9"></div>
+            <button class="btn btn-copy btn-sm" style="margin-top:10px" onclick="copyText('seo-meta')">📋 Копировать</button>
+          </div>
+          <div class="card">
+            <div class="card-title">Open Graph (соцсети)</div>
+            <div class="result-box mono" id="seo-og" style="min-height:140px;font-size:.75rem;line-height:1.9"></div>
+            <button class="btn btn-copy btn-sm" style="margin-top:10px" onclick="copyText('seo-og')">📋 Копировать</button>
+          </div>
+        </div>
+        <div>
+          <div class="card">
+            <div class="card-title">🔑 Ключевые слова (Астана + Алматы)</div>
+            <div style="display:flex;flex-direction:column;gap:10px" id="kw-list"></div>
+          </div>
+          <div class="card">
+            <div class="card-title">📊 Чек-лист SEO-оптимизации</div>
+            <div id="seo-checklist"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ CHANNELS ════ -->
+    <div class="tool-section" id="sec-channels">
+      <h2>Каналы <span>продвижения</span></h2>
+      <p class="tool-desc">Полная карта каналов для продвижения строительной компании в Казахстане с приоритетами и советами.</p>
+
+      <div class="stat-cards">
+        <div class="stat-card"><div class="stat-num">8</div><div class="stat-label">каналов продвижения</div></div>
+        <div class="stat-card"><div class="stat-num">3</div><div class="stat-label">приоритетных</div></div>
+        <div class="stat-card"><div class="stat-num">0 ₸</div><div class="stat-label">часть каналов бесплатна</div></div>
+      </div>
+
+      <div id="channels-list"></div>
+    </div>
+
+  </div><!-- /content -->
+</main>
+
+<!-- TOAST -->
+<div class="toast" id="toast">✓ Скопировано!</div>
+
+<script>
+/* ══════════ NAVIGATION ══════════ */
+const TITLES = {
+  utm:      ['🔗 UTM-генератор',    '— создание отслеживаемых ссылок для рекламных кампаний'],
+  qr:       ['📲 QR-код на сайт',   '— сканируемый код для офлайн-рекламы'],
+  posts:    ['📱 Посты для соцсетей','— 10 готовых публикаций с кнопкой копирования'],
+  hashtags: ['#️⃣ Хэштеги',          '— готовые наборы для Instagram по тематике'],
+  ads:      ['📣 Объявления',        '— тексты для OLX, Kaspi, 2GIS, Google и Яндекс'],
+  calendar: ['📅 Контент-план',      '— расписание публикаций на месяц'],
+  seo:      ['🔍 SEO-пакет',         '— мета-теги и ключевые слова для поисковиков'],
+  channels: ['📡 Каналы продвижения','— карта рекламных каналов для Казахстана'],
+};
+
+function show(id) {
+  document.querySelectorAll('.tool-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.sb-link').forEach(l => l.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  const btn = [...document.querySelectorAll('.sb-link')]
+    .find(b => b.getAttribute('onclick') === `show('${id}')`);
+  if (btn) btn.classList.add('active');
+  const [t, d] = TITLES[id] || ['', ''];
+  document.getElementById('topTitle').textContent = t;
+  document.getElementById('topDesc').textContent = d;
+}
+
+/* ══════════ COPY HELPER ══════════ */
+function copyText(elId) {
+  const el = document.getElementById(elId);
+  const text = el.innerText || el.textContent;
+  navigator.clipboard.writeText(text.trim()).then(() => showToast('✓ Скопировано!'));
+}
+function copyRaw(text) {
+  navigator.clipboard.writeText(text.trim()).then(() => showToast('✓ Скопировано!'));
+}
+function showToast(msg = '✓ Скопировано!') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+/* ══════════ UTM ══════════ */
+function generateUTM() {
+  const url      = document.getElementById('utm-url').value.trim() || 'https://стройmaster.kz';
+  const source   = document.getElementById('utm-source').value;
+  const medium   = document.getElementById('utm-medium').value;
+  const campaign = document.getElementById('utm-campaign').value.trim() || 'campaign';
+  const content  = document.getElementById('utm-content').value.trim();
+
+  let link = `${url}?utm_source=${encodeURIComponent(source)}&utm_medium=${encodeURIComponent(medium)}&utm_campaign=${encodeURIComponent(campaign)}`;
+  if (content) link += `&utm_content=${encodeURIComponent(content)}`;
+
+  document.getElementById('utm-result').textContent = link;
+
+  const channels = [
+    ['Instagram',  'instagram', 'social'],
+    ['Telegram',   'telegram',  'messenger'],
+    ['WhatsApp',   'whatsapp',  'messenger'],
+    ['Google Ads', 'google',    'cpc'],
+    ['Яндекс',     'yandex',    'cpc'],
+    ['2GIS',       '2gis',      'referral'],
+    ['OLX',        'olx',       'referral'],
+    ['Kaspi',      'kaspi',     'referral'],
+  ];
+
+  let html = '<table class="tbl" style="font-size:.75rem"><thead><tr><th>Канал</th><th>UTM-ссылка</th><th></th></tr></thead><tbody>';
+  channels.forEach(([name, src, med]) => {
+    let l = `${url}?utm_source=${src}&utm_medium=${med}&utm_campaign=${encodeURIComponent(campaign)}`;
+    if (content) l += `&utm_content=${encodeURIComponent(content)}`;
+    html += `<tr><td><strong>${name}</strong></td><td style="color:var(--gold2);font-family:monospace;word-break:break-all">${l}</td><td><button class="btn btn-copy btn-sm" onclick="copyRaw('${l.replace(/'/g,"\\'")}')">📋</button></td></tr>`;
+  });
+  html += '</tbody></table>';
+  document.getElementById('utm-table-output').innerHTML = html;
+}
+function utmSourceChange(sel) {
+  if (sel.value === 'custom') {
+    sel.nextElementSibling?.remove();
+    const inp = document.createElement('input');
+    inp.type = 'text'; inp.placeholder = 'Свой источник';
+    inp.style.marginTop = '8px';
+    inp.onchange = () => sel.value = inp.value;
+    sel.insertAdjacentElement('afterend', inp);
+  }
+}
+function applyTemplate(source, medium, campaign) {
+  document.getElementById('utm-source').value   = source;
+  document.getElementById('utm-medium').value   = medium;
+  document.getElementById('utm-campaign').value = campaign;
+  generateUTM();
+}
+function shortUtm() {
+  const link = document.getElementById('utm-result').textContent;
+  if (!link.startsWith('http')) return showToast('⚠️ Сначала сгенерируйте ссылку');
+  window.open(`https://bitly.com/?url=${encodeURIComponent(link)}`, '_blank');
+}
+
+/* ══════════ QR ══════════ */
+let qrInstance = null;
+function qrPresetChange(sel) {
+  document.getElementById('qr-custom-wrap').style.display = sel.value === 'custom' ? 'block' : 'none';
+}
+function generateQR() {
+  const sel  = document.getElementById('qr-preset');
+  const url  = sel.value === 'custom'
+    ? (document.getElementById('qr-custom').value || 'https://стройmaster.kz')
+    : sel.value;
+  const size = parseInt(document.getElementById('qr-size').value);
+
+  const out = document.getElementById('qrOutput');
+  out.innerHTML = '';
+  qrInstance = new QRCode(out, {
+    text: url, width: size, height: size,
+    colorDark: '#08080f', colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.H,
+  });
+  showToast('✓ QR-код сгенерирован!');
+}
+function downloadQR() {
+  const canvas = document.querySelector('#qrOutput canvas');
+  const img    = document.querySelector('#qrOutput img');
+  if (!canvas && !img) return showToast('⚠️ Сначала сгенерируйте QR-код');
+  if (canvas) {
+    const a = document.createElement('a');
+    a.download = 'stroymaster-qr.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+  } else {
+    const a = document.createElement('a'); a.download = 'stroymaster-qr.png'; a.href = img.src; a.click();
+  }
+}
+
+/* ══════════ POSTS ══════════ */
+const POSTS = [
+  {
+    platform: 'instagram', label: '📸 Instagram', cls: 'badge-ig',
+    title: 'Капитальный ремонт до/после',
+    text: `🏠 Капитальный ремонт двушки в Астане — 64 м²
+
+✅ Выровняли стены и потолки
+✅ Заменили электрику и сантехнику
+✅ Уложили плитку и ламинат
+✅ Натяжные потолки по всей квартире
+
+⏱️ Срок: 2,5 месяца
+💰 Стоимость: по смете, не изменилась ни на тиын
+
+📸 До и после — смотрите в карусели →
+
+📋 Бесплатная смета за 24 часа
+📞 +7 (700) 555-35-35
+🔗 Ссылка на сайт в шапке профиля
+
+#ремонтастана #капитальныйремонт #ремонтподключ #доипосле #beforeafter`,
+  },
+  {
+    platform: 'instagram', label: '📸 Instagram', cls: 'badge-ig',
+    title: 'Строительство дома',
+    text: `🏡 Строим дом вашей мечты в Алматы
+
+Закончили коттедж 180 м² из газобетона — под ключ за 9 месяцев.
+
+Что сделали:
+🔹 Ленточный фундамент
+🔹 Стены из газобетонных блоков
+🔹 Кровля — металлочерепица
+🔹 Все коммуникации (электро, сантехника, отопление)
+🔹 Чистовая отделка
+
+💰 Цены от 130 000 ₸ / м²
+📋 Расчёт стоимости — бесплатно!
+📞 +7 (700) 555-35-35
+
+#строительстводомов #строительствоалматы #домподключ #частныйдом #коттедж #газобетон`,
+  },
+  {
+    platform: 'instagram', label: '📸 Instagram', cls: 'badge-ig',
+    title: 'Акция — бесплатный дизайн-проект',
+    text: `🎁 АКЦИЯ — Дизайн-проект в ПОДАРОК!
+
+При заказе ремонта квартиры от 50 м² — дизайн-проект бесплатно.
+
+Что включает подарок:
+• 3D-визуализация каждой комнаты
+• Планировочное решение
+• Спецификация материалов
+• Смета с фиксированной ценой
+
+⏳ Предложение действует ограниченное время
+
+Записаться: +7 (700) 555-35-35
+Или напишите нам в директ 👇
+
+#ремонтастана #ремонталматы #акция #дизайнинтерьера #бесплатно #ремонт2025`,
+  },
+  {
+    platform: 'instagram', label: '📸 Instagram', cls: 'badge-ig',
+    title: 'Наши гарантии',
+    text: `🛡️ Почему нам доверяют 830+ клиентов?
+
+1️⃣ Фиксированная смета
+Цена не меняется после подписания договора. Никаких доплат.
+
+2️⃣ Гарантия 3 года
+На все виды работ. Дефекты — устраняем бесплатно.
+
+3️⃣ Сроки в договоре
+За каждый день просрочки — штраф в вашу пользу.
+
+4️⃣ Фото каждый день
+Контролируйте ход ремонта из любой точки мира.
+
+5️⃣ Уборка включена
+После сдачи — полная уборка без доплат.
+
+📞 Консультация: +7 (700) 555-35-35
+
+#ремонтказахстан #гарантия #качество #надёжность #строймастер`,
+  },
+  {
+    platform: 'telegram', label: '✈️ Telegram', cls: 'badge-tg',
+    title: 'Анонс новой работы',
+    text: `🏠 Сдали объект в Астане!
+
+Капитальный ремонт 3-комнатной квартиры в ЖК «Нурсити» — 82 м².
+
+📋 Что сделали:
+— Полный демонтаж
+— Новая разводка электрики (5 кВт)
+— Замена всей сантехники
+— Штукатурка, стяжка
+— Чистовая отделка под ключ
+— Натяжные потолки с подсветкой
+
+⏱️ Срок: 3 месяца
+📸 Фото в следующем сообщении
+
+Хотите так же? 👇
+📞 +7 (700) 555-35-35
+🌐 стройmaster.kz`,
+  },
+  {
+    platform: 'telegram', label: '✈️ Telegram', cls: 'badge-tg',
+    title: 'Полезный контент — мифы о ремонте',
+    text: `⚡ 5 мифов о ремонте, которые стоят вам денег
+
+❌ МИФ 1: «Куплю материалы сам — сэкономлю»
+✅ Правда: бригада без гарантии не отвечает за качество «ваших» материалов. Плюс вы переплачиваете в розницу 15–25%.
+
+❌ МИФ 2: «Черновой ремонт не важен»
+✅ Правда: плохая стяжка и штукатурка = трещины через полгода.
+
+❌ МИФ 3: «Смета вырастет, это нормально»
+✅ Правда: профессионалы фиксируют цену в договоре. Требуйте это.
+
+❌ МИФ 4: «Дешевле = выгоднее»
+✅ Правда: переделка обходится в 2 раза дороже первичного ремонта.
+
+❌ МИФ 5: «Контролировать не нужно»
+✅ Правда: ежедневный фотоотчёт — ваше право и наша обязанность.
+
+📞 Консультация бесплатно: +7 (700) 555-35-35`,
+  },
+  {
+    platform: 'whatsapp', label: '💬 WhatsApp', cls: 'badge-wa',
+    title: 'Рассылка — приветствие',
+    text: `Здравствуйте! 👋
+
+Это СтройМастер — ремонт квартир и строительство домов в Астане и Алматы.
+
+Мы работаем с 2008 года. 830+ объектов сданы в срок.
+
+Что предлагаем:
+✅ Бесплатный выезд замерщика
+✅ Смета без скрытых доплат
+✅ Гарантия 3 года на все работы
+✅ Фотоотчёт каждый день
+
+Хотите рассчитать стоимость ремонта?
+Напишите «да» — и мы свяжемся с вами!
+
+С уважением,
+Команда СтройМастер
+📞 +7 (700) 555-35-35`,
+  },
+  {
+    platform: 'whatsapp', label: '💬 WhatsApp', cls: 'badge-wa',
+    title: 'Статусы WhatsApp Business',
+    text: `Статус 1:
+🏠 Ремонт квартир в Астане и Алматы. Бесплатная смета за 24 ч. Гарантия 3 года. 📞 +7 (700) 555-35-35
+
+---
+
+Статус 2:
+🏡 Строим дома под ключ от 130 000 ₸/м². Звоните — рассчитаем стоимость бесплатно!
+
+---
+
+Статус 3:
+📋 Новый объект сдан! Капитальный ремонт 64 м² в Астане. Фото по запросу 👇
+
+---
+
+Статус 4:
+⭐ 830 довольных клиентов. Присоединитесь! Ремонт от 12 000 ₸/м².`,
+  },
+  {
+    platform: '2gis', label: '📍 2GIS', cls: 'badge-2gis',
+    title: 'Описание компании для 2GIS',
+    text: `СтройМастер — профессиональный ремонт квартир и строительство домов в Астане и Алматы.
+
+Работаем с 2008 года. Более 830 объектов сдано в срок.
+
+🔧 УСЛУГИ:
+• Косметический ремонт — от 12 000 ₸/м²
+• Капитальный ремонт — от 28 000 ₸/м²
+• Строительство домов — от 130 000 ₸/м²
+• Ремонт ванных комнат
+• Инженерные системы (электрика, сантехника)
+• Фасадные работы
+
+🛡️ ГАРАНТИЯ 3 ГОДА на все виды работ.
+📋 Фиксированная смета — цена не меняется.
+📸 Ежедневный фотоотчёт с объекта.
+🚗 Бесплатный выезд замерщика в течение 24 часов.
+
+Режим работы: Пн-Вс 8:00–21:00
+📞 +7 (700) 555-35-35`,
+  },
+  {
+    platform: 'instagram', label: '📸 Instagram', cls: 'badge-ig',
+    title: 'Кейс — ванная комната',
+    text: `🚿 Ванная комната за 4 недели — Алматы
+
+Было: советская ванная, протекающие трубы, треснутая плитка.
+Стало: современный санузел с тёплым полом и душем с термостатом.
+
+Что сделали:
+✅ Полный демонтаж
+✅ Гидроизоляция в 3 слоя
+✅ Новые трубы (полипропилен)
+✅ Тёплый пол 4 м²
+✅ Укладка плитки «паркет»
+✅ Душевая кабина с поддоном
+✅ Подвесной унитаз + инсталляция
+✅ Вытяжка и точечное освещение
+
+💰 Стоимость под ключ — по фиксированной смете
+📸 Все фото — в карусели
+
+📞 +7 (700) 555-35-35
+
+#ремонтванной #плитка #ванная #санузел #тёплыйпол #ремонталматы`,
+  },
+];
+
+function renderPosts(filter = 'all') {
+  const c = document.getElementById('posts-container');
+  c.innerHTML = '';
+  POSTS.filter(p => filter === 'all' || p.platform === filter).forEach((p, i) => {
+    c.innerHTML += `
+      <div class="post-card" data-platform="${p.platform}">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <span class="post-platform badge ${p.cls}" style="font-size:.75rem;padding:4px 12px">${p.label}</span>
+          <span style="font-size:.78rem;color:var(--muted2)">${p.title}</span>
+        </div>
+        <div class="post-text">${p.text}</div>
+        <div class="post-actions">
+          <button class="btn btn-copy btn-sm" onclick="copyRaw(\`${p.text.replace(/`/g,'\\`')}\`)">📋 Копировать текст</button>
+          <button class="btn btn-outline btn-sm" onclick="toggleEdit(${i})">✏️ Редактировать</button>
+        </div>
+        <textarea id="edit-${i}" style="display:none;margin-top:10px;width:100%;min-height:140px;font-size:.83rem">${p.text}</textarea>
+      </div>`;
+  });
+}
+function filterPosts(f) {
+  renderPosts(f);
+}
+function toggleEdit(i) {
+  const ta = document.getElementById(`edit-${i}`);
+  ta.style.display = ta.style.display === 'none' ? 'block' : 'none';
+}
+
+/* ══════════ ADS ══════════ */
+const ADS = [
+  { platform: '📦 OLX.kz', badge: 'badge-tg',
+    title: 'Ремонт квартир — Астана',
+    text: `Ремонт квартир под ключ в Астане | Гарантия 3 года | СтройМастер
+
+Профессиональный ремонт квартир с 2008 года. 830+ объектов.
+
+✅ Косметический ремонт — от 12 000 ₸/м²
+✅ Капитальный ремонт — от 28 000 ₸/м²
+✅ Дизайнерский ремонт под ключ
+
+Наши преимущества:
+• Фиксированная смета — цена не растёт
+• Гарантия 3 года
+• Бесплатный выезд замерщика
+• Ежедневный фотоотчёт
+
+Звоните: +7 (700) 555-35-35
+Работаем Пн–Вс 8:00–21:00` },
+  { platform: '📦 OLX.kz', badge: 'badge-tg',
+    title: 'Строительство домов — Алматы',
+    text: `Строительство домов под ключ в Алматы | СтройМастер
+
+Строим частные дома из кирпича, газобетона и по каркасной технологии.
+
+💰 От 130 000 ₸ / м² — под ключ
+
+Что входит:
+• Проектирование
+• Фундамент любого типа
+• Стены, кровля, перекрытия
+• Все коммуникации
+• Чистовая отделка
+
+Бесплатный расчёт стоимости!
+📞 +7 (700) 555-35-35` },
+  { platform: '📍 2GIS Реклама', badge: 'badge-2gis',
+    title: 'Баннер 2GIS — короткий',
+    text: `СтройМастер | Ремонт квартир в Астане
+✅ Гарантия 3 года | Фиксированная цена
+От 12 000 ₸/м² | Звоните: +7 (700) 555-35-35` },
+  { platform: '🟡 Kaspi Объявления', badge: 'badge-seo',
+    title: 'Kaspi — ремонт квартир',
+    text: `Ремонт квартир под ключ | Астана и Алматы
+
+Профессиональный ремонт с гарантией 3 года. Работаем с 2008 года.
+
+Цены:
+• Косметический: от 12 000 ₸/м²
+• Капитальный: от 28 000 ₸/м²
+
+Бесплатный замер за 24 часа!
++7 (700) 555-35-35` },
+  { platform: '🔍 Google Ads', badge: 'badge-seo',
+    title: 'Google — поисковое объявление',
+    text: `Заголовок 1: Ремонт квартир в Астане
+Заголовок 2: Гарантия 3 года | От 12 000 ₸/м²
+Заголовок 3: Бесплатный замер за 24 часа
+
+Описание 1:
+Профессиональный ремонт квартир под ключ. Фиксированная смета, ежедневный фотоотчёт. 830+ объектов сдано.
+
+Описание 2:
+Работаем в Астане и Алматы с 2008 года. Смета бесплатно. Звоните: +7 700 555-35-35
+
+URL: стройmaster.kz` },
+  { platform: '🔶 Яндекс.Директ', badge: 'badge-seo',
+    title: 'Яндекс — поисковое объявление',
+    text: `Заголовок (56 символов):
+Ремонт квартир Астана — от 12 000 ₸/м², гарантия 3 года
+
+Текст объявления (81 символ):
+Профессиональный ремонт под ключ. Фиксированная смета. Бесплатный замер!
+
+Быстрые ссылки:
+• Цены и пакеты
+• Наши работы (портфолио)
+• Оставить заявку
+• Контакты` },
+];
+
+function renderAds() {
+  const c = document.getElementById('ads-container');
+  ADS.forEach(a => {
+    c.innerHTML += `
+      <div class="post-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <span class="badge ${a.badge}" style="padding:4px 12px;font-size:.75rem">${a.platform}</span>
+          <span style="font-size:.78rem;color:var(--muted2)">${a.title}</span>
+        </div>
+        <div class="post-text">${a.text}</div>
+        <div class="post-actions">
+          <button class="btn btn-copy btn-sm" onclick="copyRaw(\`${a.text.replace(/`/g,'\\`')}\`)">📋 Копировать</button>
+        </div>
+      </div>`;
+  });
+}
+
+/* ══════════ CALENDAR ══════════ */
+const CAL_DATA = [
+  ['Пн, нед. 1', 'Знакомство с командой — фото мастеров', 'Instagram', 'Фото', 'Доверие'],
+  ['Вт, нед. 1', 'Кейс: ремонт ванной «до/после»', 'Instagram', 'Карусель', 'Портфолио'],
+  ['Ср, нед. 1', 'Рассылка: спецпредложение месяца', 'WhatsApp', 'Текст', 'Лиды'],
+  ['Чт, нед. 1', 'Полезный пост: 5 ошибок при ремонте', 'Telegram', 'Текст', 'Охват'],
+  ['Пт, нед. 1', 'Видео: таймлапс ремонта квартиры', 'Instagram', 'Reels', 'Виральность'],
+  ['Сб, нед. 1', 'Отзыв довольного клиента', 'Instagram', 'Фото', 'Доверие'],
+  ['Вс, нед. 1', 'Анонс акции следующей недели', 'Telegram', 'Текст', 'Вовлечение'],
+  ['Пн, нед. 2', 'Кейс: строительство дома в Алматы', 'Instagram', 'Карусель', 'Портфолио'],
+  ['Вт, нед. 2', 'Инфографика: сроки ремонта', 'Instagram', 'Картинка', 'Охват'],
+  ['Ср, нед. 2', 'Обновление 2GIS: фото объектов', '2GIS', 'Фото', 'Поиск'],
+  ['Чт, нед. 2', 'Вопрос подписчикам: чего боитесь в ремонте?', 'Instagram', 'Сторис', 'Вовлечение'],
+  ['Пт, нед. 2', 'Полезно: как проверить подрядчика', 'Telegram', 'Текст', 'Экспертиза'],
+  ['Сб, нед. 2', 'Фотоотчёт с текущего объекта', 'Instagram', 'Фото', 'Прозрачность'],
+  ['Вс, нед. 2', 'Акция: дизайн-проект в подарок', 'WhatsApp', 'Текст', 'Лиды'],
+  ['Пн, нед. 3', 'Кейс: капитальный ремонт «до/после»', 'Instagram', 'Карусель', 'Портфолио'],
+  ['Вт, нед. 3', '5 причин выбрать нас', 'Telegram', 'Текст', 'Доверие'],
+  ['Ср, нед. 3', 'Сторис: опрос — какой ремонт планируете?', 'Instagram', 'Сторис', 'Лиды'],
+  ['Чт, нед. 3', 'Видео: процесс укладки плитки', 'Instagram', 'Reels', 'Виральность'],
+  ['Пт, нед. 3', 'Рассылка: напоминание о бесплатном замере', 'WhatsApp', 'Текст', 'Лиды'],
+  ['Сб, нед. 3', 'Отзыв: строительство дома в Астане', 'Instagram', 'Фото', 'Доверие'],
+  ['Вс, нед. 3', 'Полезно: материалы для ремонта — гид', 'Telegram', 'Текст', 'Экспертиза'],
+  ['Пн, нед. 4', 'Итоги месяца: объекты, которые сдали', 'Instagram', 'Карусель', 'Портфолио'],
+  ['Вт, нед. 4', 'Кейс: фасадные работы', 'Instagram', 'Фото', 'Портфолио'],
+  ['Ср, нед. 4', 'Анонс: новые цены / акция на следующий месяц', 'WhatsApp', 'Текст', 'Лиды'],
+  ['Чт, нед. 4', 'Экспертный пост: как принять работу', 'Telegram', 'Текст', 'Экспертиза'],
+  ['Пт, нед. 4', 'Видео: наша команда на объекте', 'Instagram', 'Reels', 'Доверие'],
+  ['Сб, нед. 4', 'Конкурс или розыгрыш консультации', 'Instagram', 'Пост', 'Охват'],
+  ['Вс, нед. 4', 'Итоговый отчёт месяца', 'Telegram', 'Текст', 'Доверие'],
+];
+const PLAT_BADGE = { Instagram:'badge-ig', Telegram:'badge-tg', WhatsApp:'badge-wa', '2GIS':'badge-2gis' };
+function renderCalendar() {
+  const b = document.getElementById('calendar-body');
+  CAL_DATA.forEach(([day, topic, plat, type, goal]) => {
+    b.innerHTML += `<tr>
+      <td style="white-space:nowrap;color:var(--muted2)">${day}</td>
+      <td><strong>${topic}</strong></td>
+      <td><span class="badge ${PLAT_BADGE[plat]||'badge-seo'}">${plat}</span></td>
+      <td style="color:var(--muted)">${type}</td>
+      <td style="color:var(--gold2)">${goal}</td>
+    </tr>`;
+  });
+}
+
+/* ══════════ HASHTAGS ══════════ */
+const HT_MAP = {
+  'ремонт квартир': { astana: ['#ремонтастана','#ремонтквартирастана','#прорабастана','#отделкаастана'], almaty: ['#ремонталматы','#ремонтквартиралматы','#прорабалматы'], common: ['#ремонтподключ','#капитальныйремонт','#ремонт2025'] },
+  'строительство дома': { astana: ['#строительствоастана'], almaty: ['#строительствоалматы'], common: ['#строительстводомов','#домподключ','#частныйдом','#коттедж','#газобетон'] },
+  'ремонт ванной': { astana: [], almaty: [], common: ['#ремонтванной','#плитка','#укладкаплитки','#ванная','#санузел','#теплыйпол'] },
+  'электромонтаж': { astana: ['#электрикастана'], almaty: ['#электрикалматы'], common: ['#электромонтаж','#проводка','#электрик'] },
+  'отделка фасада': { astana: [], almaty: [], common: ['#фасад','#утеплениефасада','#декоративнаяштукатурка','#сайдинг'] },
+};
+function buildHashtags() {
+  const srv  = document.getElementById('ht-service').value;
+  const city = document.getElementById('ht-city').value;
+  const m    = HT_MAP[srv];
+  if (!m) return;
+  const cityTags = city === 'Астана' ? m.astana : m.almaty;
+  const all = [...m.common, ...cityTags, '#строймастер','#ремонтказахстан','#бесплатнаясмета','#гарантия3года'];
+  document.getElementById('ht-result').textContent = all.join(' ');
+}
+
+/* ══════════ SEO ══════════ */
+function renderSEO() {
+  document.getElementById('seo-meta').textContent =
+`<title>Ремонт квартир и строительство домов в Астане и Алматы | СтройМастер</title>
+<meta name="description" content="Профессиональный ремонт квартир и строительство домов под ключ в Астане и Алматы. От 12 000 ₸/м². Гарантия 3 года. Бесплатная смета за 24 часа. +7 (700) 555-35-35">
+<meta name="keywords" content="ремонт квартир Астана, ремонт квартир Алматы, строительство домов Казахстан, капитальный ремонт Астана, ремонт под ключ Алматы, отделка квартир цены">
+<link rel="canonical" href="https://стройmaster.kz/" />`;
+
+  document.getElementById('seo-og').textContent =
+`<meta property="og:type" content="website" />
+<meta property="og:title" content="СтройМастер — Ремонт и строительство в Астане и Алматы" />
+<meta property="og:description" content="Ремонт квартир от 12 000 ₸/м². Строительство домов от 130 000 ₸/м². Гарантия 3 года. 830+ объектов." />
+<meta property="og:url" content="https://стройmaster.kz/" />
+<meta property="og:image" content="https://стройmaster.kz/og-image.jpg" />
+<meta name="twitter:card" content="summary_large_image" />`;
+
+  const kws = [
+    ['ремонт квартир Астана', 'Высокий', 90],
+    ['ремонт квартир Алматы', 'Высокий', 88],
+    ['капитальный ремонт Астана', 'Высокий', 82],
+    ['строительство домов Казахстан', 'Высокий', 78],
+    ['ремонт квартиры под ключ Астана', 'Средний', 70],
+    ['отделка квартиры Алматы цена', 'Средний', 65],
+    ['прораб Астана', 'Средний', 60],
+    ['бригада ремонт Алматы', 'Средний', 55],
+    ['ремонт ванной комнаты Астана', 'Низкий', 42],
+    ['строительство дома под ключ Алматы', 'Низкий', 38],
+  ];
+  const kEl = document.getElementById('kw-list');
+  const colors = { 'Высокий': 'var(--red)', 'Средний': 'var(--gold)', 'Низкий': 'var(--green)' };
+  kws.forEach(([kw, lvl, val]) => {
+    kEl.innerHTML += `<div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+        <span style="font-size:.82rem">${kw}</span>
+        <span style="font-size:.72rem;color:${colors[lvl]};font-weight:700">${lvl}</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${val}%;background:${colors[lvl]}"></div></div>
+    </div>`;
+  });
+
+  const checks = [
+    ['Мета-теги title и description заполнены', true],
+    ['Open Graph теги настроены', true],
+    ['Сайт открывается по HTTPS', false],
+    ['Карта сайта (sitemap.xml) создана', false],
+    ['Robots.txt настроен', false],
+    ['Сайт добавлен в Google Search Console', false],
+    ['Сайт добавлен в Яндекс Вебмастер', false],
+    ['Страница зарегистрирована в 2GIS', false],
+    ['Скорость загрузки < 3 секунды', false],
+    ['Сайт адаптирован под мобильные', true],
+    ['Структурированные данные (schema.org)', false],
+    ['Отзывы на Google Maps / 2GIS', false],
+  ];
+  const cEl = document.getElementById('seo-checklist');
+  checks.forEach(([text, done]) => {
+    cEl.innerHTML += `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--brd);font-size:.83rem">
+      <span style="font-size:1rem">${done ? '✅' : '⬜'}</span>
+      <span style="color:${done ? 'var(--text)' : 'var(--muted)'}">${text}</span>
+    </div>`;
+  });
+}
+
+/* ══════════ CHANNELS ══════════ */
+const CHANNELS = [
+  { icon: '📸', name: 'Instagram', priority: '🔴 Приоритет 1',
+    desc: 'Главный визуальный канал. Публикуйте фото «до/после», Reels с процессом работ, Stories с опросами.',
+    tips: ['Публикуйте 1 раз в день', 'Reels дают х3 охвата', 'Используйте геотеги Астана/Алматы', 'Отвечайте в директ быстро — конверсия выше'],
+    cost: 'от 0 ₸ (органика) / от 5 000 ₸ (реклама)' },
+  { icon: '✈️', name: 'Telegram-канал', priority: '🔴 Приоритет 1',
+    desc: 'Публикуйте кейсы, полезные статьи, акции. Подписчики Telegram лояльнее и охват выше, чем в Instagram.',
+    tips: ['Создайте бота для приёма заявок', 'Публикуйте 1 раз в день', 'Кросспостите из Instagram', 'Покупайте рекламу в KZ-каналах'],
+    cost: 'от 0 ₸ (органика) / от 3 000 ₸ (реклама)' },
+  { icon: '📍', name: '2GIS', priority: '🔴 Приоритет 1',
+    desc: 'Обязателен для локального бизнеса. Клиенты ищут «ремонт рядом» — вы должны быть в топе 2GIS.',
+    tips: ['Заполните профиль на 100%', 'Добавьте 20+ фото работ', 'Собирайте отзывы после каждого объекта', 'Подключите 2GIS.Ads для топа'],
+    cost: 'от 0 ₸ (бесплатный профиль)' },
+  { icon: '💬', name: 'WhatsApp Business', priority: '🟡 Приоритет 2',
+    desc: 'Удержание клиентов и получение заявок. Рассылки по базе клиентов дают высокую конверсию.',
+    tips: ['Создайте WhatsApp Business аккаунт', 'Настройте автоответ', 'Добавьте каталог услуг', 'Делайте рассылку 2 раза в месяц'],
+    cost: 'от 0 ₸ + WhatsApp Business API' },
+  { icon: '🔍', name: 'Google Ads (поиск)', priority: '🟡 Приоритет 2',
+    desc: 'Клиент сам ищет ремонт — вы появляетесь первым. Горячий трафик с высокой конверсией.',
+    tips: ['Настройте геотаргетинг на Астана/Алматы', 'Используйте ключи с высоким намерением', 'Добавьте расширения с телефоном', 'Ставка: от 200 ₸ за клик'],
+    cost: 'от 50 000 ₸/мес.' },
+  { icon: '📦', name: 'OLX / Kaspi Объявления', priority: '🟡 Приоритет 2',
+    desc: 'Доски объявлений генерируют дешёвые заявки. Особенно эффективны для косметического ремонта.',
+    tips: ['Публикуйте объявления еженедельно', 'Обновляйте объявления каждые 3 дня', 'Добавляйте фото реальных работ', 'Отвечайте на запросы быстро'],
+    cost: 'от 0 ₸ до 5 000 ₸/мес.' },
+  { icon: '🎬', name: 'YouTube / TikTok', priority: '🟢 Приоритет 3',
+    desc: 'Долгосрочные инвестиции в органический трафик. Видео «до/после» набирают сотни тысяч просмотров.',
+    tips: ['Снимайте таймлапс ремонта', 'Делайте обзоры материалов', 'Публикуйте Shorts/TikTok регулярно', 'SEO-оптимизируйте описания'],
+    cost: 'от 0 ₸ (оборудование для съёмки)' },
+  { icon: '🔶', name: 'Яндекс.Директ', priority: '🟢 Приоритет 3',
+    desc: 'Актуален для русскоязычной аудитории Казахстана. Меньше конкуренции, чем в Google Ads.',
+    tips: ['Создайте отдельные кампании для Астаны и Алматы', 'Используйте РСЯ (рекламная сеть)', 'Ретаргетинг на посетителей сайта'],
+    cost: 'от 30 000 ₸/мес.' },
+];
+function renderChannels() {
+  const c = document.getElementById('channels-list');
+  const colors = { '🔴 Приоритет 1': 'rgba(239,68,68,.15)', '🟡 Приоритет 2': 'rgba(245,158,11,.1)', '🟢 Приоритет 3': 'rgba(34,197,94,.1)' };
+  const borders= { '🔴 Приоритет 1': 'rgba(239,68,68,.3)', '🟡 Приоритет 2': 'rgba(245,158,11,.25)', '🟢 Приоритет 3': 'rgba(34,197,94,.25)' };
+  CHANNELS.forEach(ch => {
+    c.innerHTML += `
+      <div class="card" style="background:${colors[ch.priority]};border-color:${borders[ch.priority]}">
+        <div style="display:flex;align-items:flex-start;gap:16px">
+          <div style="font-size:2rem;flex-shrink:0">${ch.icon}</div>
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+              <strong style="font-size:1rem">${ch.name}</strong>
+              <span style="font-size:.75rem;font-weight:700">${ch.priority}</span>
+              <span style="margin-left:auto;font-size:.78rem;color:var(--muted2)">💰 ${ch.cost}</span>
+            </div>
+            <p style="font-size:.85rem;color:var(--muted);margin-bottom:12px">${ch.desc}</p>
+            <div class="tags">${ch.tips.map(t => `<span class="tag" style="font-size:.76rem;cursor:default">✓ ${t}</span>`).join('')}</div>
+          </div>
+        </div>
+      </div>`;
+  });
+}
+
+/* ══════════ INIT ══════════ */
+window.onload = () => {
+  generateUTM();
+  generateQR();
+  renderPosts();
+  renderAds();
+  renderCalendar();
+  renderSEO();
+  renderChannels();
+};
+</script>
+</body>
+</html>

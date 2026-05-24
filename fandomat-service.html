@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Обслуживание фандоматов — EcoReturn</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green: #2e7d32;
+      --green-light: #43a047;
+      --green-pale: #e8f5e9;
+      --accent: #00acc1;
+      --text: #1a1a1a;
+      --muted: #5f6368;
+      --border: #dadce0;
+      --white: #ffffff;
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      color: var(--text);
+      background: #f7f9f7;
+      line-height: 1.6;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--green);
+      color: #fff;
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,.2);
+    }
+    .logo { display: flex; align-items: center; gap: 12px; font-size: 1.2rem; font-weight: 700; }
+    .logo-icon { font-size: 1.8rem; }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      margin-left: 28px;
+      font-size: .95rem;
+      opacity: .9;
+      transition: opacity .2s;
+    }
+    nav a:hover { opacity: 1; text-decoration: underline; }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, var(--green) 0%, var(--accent) 100%);
+      color: #fff;
+      padding: 80px 40px;
+      text-align: center;
+    }
+    .hero h1 { font-size: 2.4rem; margin-bottom: 16px; }
+    .hero p  { font-size: 1.15rem; max-width: 620px; margin: 0 auto 32px; opacity: .9; }
+    .btn {
+      display: inline-block;
+      background: #fff;
+      color: var(--green);
+      padding: 14px 36px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: transform .2s, box-shadow .2s;
+      box-shadow: 0 4px 14px rgba(0,0,0,.15);
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,.2); }
+
+    /* ── SECTION WRAPPER ── */
+    section { padding: 64px 40px; max-width: 1100px; margin: 0 auto; }
+    h2 { font-size: 1.8rem; color: var(--green); margin-bottom: 8px; }
+    .section-sub { color: var(--muted); margin-bottom: 40px; font-size: 1rem; }
+
+    /* ── STATS BAR ── */
+    .stats {
+      background: var(--green);
+      color: #fff;
+      padding: 36px 40px;
+    }
+    .stats-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+    .stat { text-align: center; }
+    .stat-num { font-size: 2.4rem; font-weight: 800; }
+    .stat-label { font-size: .9rem; opacity: .85; }
+
+    /* ── CARDS ── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+    }
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 24px;
+      transition: box-shadow .25s, transform .25s;
+    }
+    .card:hover { box-shadow: 0 8px 24px rgba(0,0,0,.1); transform: translateY(-3px); }
+    .card-icon { font-size: 2.4rem; margin-bottom: 14px; }
+    .card h3 { font-size: 1.1rem; margin-bottom: 8px; color: var(--green); }
+    .card p  { font-size: .93rem; color: var(--muted); }
+
+    /* ── PROCESS STEPS ── */
+    .steps { counter-reset: step; display: flex; flex-direction: column; gap: 20px; }
+    .step {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      background: var(--white);
+      border-radius: 14px;
+      padding: 24px;
+      border: 1px solid var(--border);
+    }
+    .step-num {
+      counter-increment: step;
+      min-width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--green);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .step-num::before { content: counter(step); }
+    .step h3 { font-size: 1rem; margin-bottom: 4px; }
+    .step p  { font-size: .92rem; color: var(--muted); }
+
+    /* ── SCHEDULE TABLE ── */
+    .table-wrap { overflow-x: auto; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--white);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,.07);
+    }
+    thead { background: var(--green); color: #fff; }
+    th, td { padding: 14px 18px; text-align: left; font-size: .93rem; }
+    tbody tr:nth-child(even) { background: var(--green-pale); }
+    tbody tr:hover { background: #c8e6c9; }
+    td .badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: .8rem;
+      font-weight: 600;
+    }
+    .badge-day   { background: #e3f2fd; color: #1565c0; }
+    .badge-week  { background: #fff9c4; color: #f57f17; }
+    .badge-month { background: #f3e5f5; color: #6a1b9a; }
+    .badge-year  { background: #fce4ec; color: #880e4f; }
+
+    /* ── CHECKLIST ── */
+    .checklist { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+    .checklist li {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: .93rem;
+    }
+    .checklist li::before { content: '✓'; color: var(--green); font-weight: 700; font-size: 1rem; }
+
+    /* ── ALERT ── */
+    .alert {
+      background: #fff3e0;
+      border-left: 4px solid #fb8c00;
+      border-radius: 10px;
+      padding: 18px 22px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      margin-bottom: 28px;
+    }
+    .alert-icon { font-size: 1.6rem; flex-shrink: 0; }
+    .alert h4 { margin-bottom: 4px; color: #e65100; }
+    .alert p  { font-size: .92rem; color: var(--muted); }
+
+    /* ── CONTACTS ── */
+    .contacts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+    }
+    .contact-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      text-align: center;
+    }
+    .contact-card .ci { font-size: 2rem; margin-bottom: 10px; }
+    .contact-card h4 { margin-bottom: 6px; font-size: 1rem; }
+    .contact-card a { color: var(--green); font-weight: 600; text-decoration: none; font-size: .95rem; }
+    .contact-card a:hover { text-decoration: underline; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--green);
+      color: rgba(255,255,255,.75);
+      text-align: center;
+      padding: 24px 40px;
+      font-size: .88rem;
+    }
+    footer strong { color: #fff; }
+
+    /* ── DIVIDER ── */
+    .divider { height: 1px; background: var(--border); margin: 0 40px; }
+
+    @media (max-width: 640px) {
+      header { padding: 0 20px; }
+      header nav { display: none; }
+      .hero { padding: 60px 20px; }
+      .hero h1 { font-size: 1.7rem; }
+      section { padding: 48px 20px; }
+      .stats { padding: 28px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <span class="logo-icon">♻️</span>
+    EcoReturn — Обслуживание фандоматов
+  </div>
+  <nav>
+    <a href="#services">Виды работ</a>
+    <a href="#process">Порядок</a>
+    <a href="#schedule">Регламент</a>
+    <a href="#contacts">Контакты</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>Профессиональное обслуживание фандоматов</h1>
+  <p>Обеспечиваем бесперебойную работу автоматов по приёму пластиковых бутылок — от ежедневной очистки до полного технического обслуживания.</p>
+  <a href="#contacts" class="btn">Оставить заявку</a>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stats-inner">
+    <div class="stat"><div class="stat-num">150+</div><div class="stat-label">фандоматов на обслуживании</div></div>
+    <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">аварийная поддержка</div></div>
+    <div class="stat"><div class="stat-num">98%</div><div class="stat-label">время работоспособности</div></div>
+    <div class="stat"><div class="stat-num">6 лет</div><div class="stat-label">опыт в отрасли</div></div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <h2>Виды обслуживания</h2>
+  <p class="section-sub">Полный цикл технического ухода за фандоматами любых производителей</p>
+  <div class="cards">
+    <div class="card">
+      <div class="card-icon">🧹</div>
+      <h3>Ежедневная очистка</h3>
+      <p>Чистка приёмного лотка, дезинфекция внутренних поверхностей, вывоз собранных бутылок и промывка бункера.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">⚙️</div>
+      <h3>Техническое обслуживание</h3>
+      <p>Проверка и смазка механизмов дробления, калибровка сканера штрих-кодов, тест датчиков заполнения.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🖥️</div>
+      <h3>Программное обслуживание</h3>
+      <p>Обновление прошивки, настройка параметров приёма, выгрузка статистики, диагностика ПО.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔧</div>
+      <h3>Ремонт и замена деталей</h3>
+      <p>Срочное устранение поломок: замена ножей дробилки, ремонт купюроприёмника и принтера чеков.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📊</div>
+      <h3>Мониторинг и отчётность</h3>
+      <p>Удалённый мониторинг заполнения, ежемесячные отчёты об объёме принятой тары и экологическом вкладе.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🚛</div>
+      <h3>Вывоз вторсырья</h3>
+      <p>Регулярная транспортировка спрессованного пластика на перерабатывающие предприятия.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROCESS -->
+<section id="process">
+  <h2>Порядок проведения работ</h2>
+  <p class="section-sub">Каждый выезд технического специалиста следует чёткому регламенту</p>
+
+  <div class="alert">
+    <div class="alert-icon">⚠️</div>
+    <div>
+      <h4>Важно перед началом работ</h4>
+      <p>Специалист обязан надеть защитные перчатки и маску, зафиксировать показания счётчика и сфотографировать состояние фандомата до и после обслуживания.</p>
+    </div>
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num"></div>
+      <div>
+        <h3>Визуальный осмотр</h3>
+        <p>Проверка внешнего состояния корпуса, экрана, клавиатуры и приёмного отверстия. Фиксация повреждений в журнале обслуживания.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num"></div>
+      <div>
+        <h3>Извлечение и вывоз тары</h3>
+        <p>Открытие сервисного отсека, извлечение контейнера с бутылками, взвешивание и загрузка в транспортное средство для вывоза.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num"></div>
+      <div>
+        <h3>Очистка и дезинфекция</h3>
+        <p>Промывка лотка и бункера, обработка антибактериальным средством, очистка оптики считывателя, продувка вентиляционных отверстий.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num"></div>
+      <div>
+        <h3>Диагностика оборудования</h3>
+        <p>Тестовый прогон: приём бутылки, проверка сканера, печать чека, проверка купюроприёмника и выдачи сдачи (при наличии).</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num"></div>
+      <div>
+        <h3>Обновление ПО и статистики</h3>
+        <p>Синхронизация данных с сервером, проверка обновлений прошивки, при необходимости — установка новой версии.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num"></div>
+      <div>
+        <h3>Оформление акта выполненных работ</h3>
+        <p>Специалист вносит данные в мобильное приложение, клиент подписывает акт (электронно или на бумаге), отчёт уходит в архив.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SCHEDULE TABLE -->
+<section id="schedule">
+  <h2>Регламент технического обслуживания</h2>
+  <p class="section-sub">Периодичность и перечень работ в зависимости от нагрузки на фандомат</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Вид работ</th>
+          <th>Периодичность</th>
+          <th>Ответственный</th>
+          <th>Примечание</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Вывоз принятых бутылок</td>
+          <td><span class="badge badge-day">Ежедневно</span></td>
+          <td>Оператор</td>
+          <td>При заполнении &gt; 80%</td>
+        </tr>
+        <tr>
+          <td>Очистка приёмного лотка</td>
+          <td><span class="badge badge-day">Ежедневно</span></td>
+          <td>Оператор</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>Дезинфекция поверхностей</td>
+          <td><span class="badge badge-week">1 раз в неделю</span></td>
+          <td>Технический специалист</td>
+          <td>Сертиф. средство</td>
+        </tr>
+        <tr>
+          <td>Калибровка сканера штрих-кода</td>
+          <td><span class="badge badge-week">1 раз в неделю</span></td>
+          <td>Технический специалист</td>
+          <td>Журнал калибровки</td>
+        </tr>
+        <tr>
+          <td>Смазка механизма прессования</td>
+          <td><span class="badge badge-month">1 раз в месяц</span></td>
+          <td>Инженер</td>
+          <td>Смазка по ТУ</td>
+        </tr>
+        <tr>
+          <td>Замена фильтра вентиляции</td>
+          <td><span class="badge badge-month">1 раз в месяц</span></td>
+          <td>Инженер</td>
+          <td>Оригинальные фильтры</td>
+        </tr>
+        <tr>
+          <td>Обновление программного обеспечения</td>
+          <td><span class="badge badge-month">По мере выхода</span></td>
+          <td>Инженер-программист</td>
+          <td>Удалённо или на месте</td>
+        </tr>
+        <tr>
+          <td>Полная техническая ревизия</td>
+          <td><span class="badge badge-year">1 раз в квартал</span></td>
+          <td>Старший инженер</td>
+          <td>Акт ревизии</td>
+        </tr>
+        <tr>
+          <td>Замена ножей дробилки</td>
+          <td><span class="badge badge-year">По износу / 1 год</span></td>
+          <td>Инженер</td>
+          <td>Оригинальные запчасти</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CHECKLIST -->
+<section>
+  <h2>Инструменты и материалы</h2>
+  <p class="section-sub">Обязательный набор специалиста при каждом выезде</p>
+  <ul class="checklist">
+    <li>Защитные перчатки и маска</li>
+    <li>Антибактериальный дезинфектор</li>
+    <li>Мягкие салфетки и щётки</li>
+    <li>Планшет / мобильное приложение</li>
+    <li>Набор торцевых ключей и отвёрток</li>
+    <li>Мультиметр для диагностики</li>
+    <li>Смазка для механизмов</li>
+    <li>Запасные фильтры вентиляции</li>
+    <li>Контейнеры для вывоза бутылок</li>
+    <li>Бланки актов выполненных работ</li>
+    <li>Тестовые штрих-коды бутылок</li>
+    <li>USB-накопитель с прошивкой</li>
+  </ul>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTACTS -->
+<section id="contacts">
+  <h2>Связаться с нами</h2>
+  <p class="section-sub">Оставьте заявку или свяжитесь с нами любым удобным способом</p>
+  <div class="contacts-grid">
+    <div class="contact-card">
+      <div class="ci">📞</div>
+      <h4>Телефон</h4>
+      <a href="tel:+78001234567">8 800 123-45-67</a>
+      <p style="font-size:.82rem;color:var(--muted);margin-top:6px;">Пн–Пт 8:00–20:00</p>
+    </div>
+    <div class="contact-card">
+      <div class="ci">🚨</div>
+      <h4>Аварийная служба</h4>
+      <a href="tel:+78001234568">8 800 123-45-68</a>
+      <p style="font-size:.82rem;color:var(--muted);margin-top:6px;">Круглосуточно, 24/7</p>
+    </div>
+    <div class="contact-card">
+      <div class="ci">✉️</div>
+      <h4>Email</h4>
+      <a href="mailto:service@ecoreturn.ru">service@ecoreturn.ru</a>
+      <p style="font-size:.82rem;color:var(--muted);margin-top:6px;">Ответ в течение 2 часов</p>
+    </div>
+    <div class="contact-card">
+      <div class="ci">💬</div>
+      <h4>Telegram-бот</h4>
+      <a href="#">@EcoReturnBot</a>
+      <p style="font-size:.82rem;color:var(--muted);margin-top:6px;">Подать заявку онлайн</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <strong>EcoReturn</strong> — Обслуживание фандоматов &nbsp;|&nbsp; © 2026 &nbsp;|&nbsp;
+  Все права защищены
+</footer>
+
+</body>
+</html>
